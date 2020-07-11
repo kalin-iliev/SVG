@@ -50,5 +50,10 @@ SVGAppWrapper.o: src/SVGAppWrapper.h src/shared/utils/ConsoleHelpers.h
 
 SVGShapesManager.o: src/SVGShapesManager.h src/shapes/Shape.h src/shapes/Line.h src/shapes/Rectangle.h src/shapes/Circle.h src/containers/String.h
 	$(GCC) -c -o obj/SVGShapesManager.o src/SVGShapesManager.cpp -Isrc/shapes -Isrc/containers -Isrc/attributes -Isrc/shared -Isrc/shared/utils
+
+tests: tests/acceptance_tests/main.cpp
+	$(GCC) -o runTests -Wall -g -pthread tests/acceptance_tests/main.cpp -lgtest -lgtest_main -lpthread
+
 clean:
-	rm -r obj/
+	rm -f runTests
+	rm -rf obj/
