@@ -68,14 +68,12 @@ void Rectangle::translateCoordinates(long int incX, long int incY) {
 	long int y = attributes[yStr].getValue().strToInt();
 	x += incX;
 	y += incY;
-	char newX[20];
-	char newY[20];
-	_itoa(x, newX, 10);
-	_itoa(y, newY, 10);
-	String xValue(newX);
-	String yValue(newY);
-	attributes.setAttrValue(xStr, xValue);
-	attributes.setAttrValue(yStr, yValue);
+	String newX;
+	String newY;
+	newX = String(std::to_string(x).c_str());
+	newY = String(std::to_string(y).c_str());
+	attributes.setAttrValue(xStr, newX);
+	attributes.setAttrValue(yStr, newY);
 	setText();
 }
 

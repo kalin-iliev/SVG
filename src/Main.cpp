@@ -1,13 +1,9 @@
 #include "SVGAppWrapper.h"
-#include "SVGTest.h"
 
 int main() {
 	//main logic
-	//SVGAppWrapper newAppStart;
-	//newAppStart.start();
-
-	//testing
-	SVGTest::testAllFunctions();
+	SVGAppWrapper newAppStart;
+	newAppStart.start();
 
 	return 0;
 }

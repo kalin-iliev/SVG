@@ -71,18 +71,18 @@ void Line::translateCoordinates(long int incX, long int incY) {
 	y1 += incY;
 	y2 += incY;
 
-	char bufferX1[20];
-	char bufferX2[20];
-	char bufferY1[20];
-	char bufferY2[20];
-	_itoa(x1, bufferX1, 10);
-	_itoa(y1, bufferY1, 10);
-	_itoa(x2, bufferX2, 10);
-	_itoa(y2, bufferY2, 10);
-	attributes.setAttrValue(x1Attr, String(bufferX1));
-	attributes.setAttrValue(y1Attr, String(bufferY1));
-	attributes.setAttrValue(x2Attr, String(bufferX2));
-	attributes.setAttrValue(y2Attr, String(bufferY2));
+	String bufferX1;
+	String bufferX2;
+	String bufferY1;
+	String bufferY2;
+	bufferX1 = String(std::to_string(x1).c_str());
+	bufferY1 = String(std::to_string(y1).c_str());
+	bufferX2 = String(std::to_string(x2).c_str());
+	bufferY2 = String(std::to_string(y2).c_str());
+	attributes.setAttrValue(x1Attr, bufferX1);
+	attributes.setAttrValue(y1Attr, bufferY1);
+	attributes.setAttrValue(x2Attr, bufferX2);
+	attributes.setAttrValue(y2Attr, bufferY2);
 	setText();
 }
 

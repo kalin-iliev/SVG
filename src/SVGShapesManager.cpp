@@ -383,8 +383,7 @@ bool SVGShapesManager::removeShape(unsigned index) {
 	try {
 		if (!shiftShapes(index))
 		{
-			char buffer[20];
-			throw (String("There is no figure at index ") + String(_itoa(index, buffer, 10)));
+			throw (String("There is no figure at index ") + String(std::to_string(index).c_str()));
 		}
 		int middleCapacity = (capacity / 2) + (capacity % 2);
 		Shape* currentShape = shapes[index - 1]->clone();

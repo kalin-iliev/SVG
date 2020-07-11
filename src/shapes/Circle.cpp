@@ -1,6 +1,7 @@
 #include "Circle.h"
 #include <iostream>
 #include <cmath>
+#include <string>
 
 Shape* Circle::clone() {
 	return new Circle(*this);
@@ -71,10 +72,10 @@ void Circle::translateCoordinates(long int incX, long int incY) {
 	long int cy = attributes[cyStr].getValue().strToInt();
 	cx += incX;
 	cy += incY;
-	char newCx[20];
-	char newCy[20];
-	_itoa(cx, newCx, 10);
-	_itoa(cy, newCy, 10);
+	String newCx;
+	String newCy;
+	newCx = String(std::to_string(cx).c_str());
+	newCy = String(std::to_string(cy).c_str());
 	attributes.setAttrValue(cxStr, String(newCx));
 	attributes.setAttrValue(cyStr, String(newCy));
 	setText();

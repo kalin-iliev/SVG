@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string.h>
 #include "StringHelpers.h"
 
 const int MAX_READ_SIZE = 1024;

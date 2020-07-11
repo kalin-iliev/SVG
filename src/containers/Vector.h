@@ -131,7 +131,7 @@ inline typename Vector<T>::Iterator Vector<T>::begin() {
 }
 
 template <class T>
-inline typename const Vector<T>::Iterator Vector <T>::begin() const {
+inline const typename Vector<T>::Iterator Vector <T>::begin() const {
 	return Vector<T>::Iterator(&vContainer[0]);
 }
 
@@ -141,7 +141,7 @@ inline typename Vector<T>::Iterator Vector <T>::end() {
 }
 
 template <class T>
-inline typename const Vector<T>::Iterator Vector <T>::end() const {
+inline const typename Vector<T>::Iterator Vector <T>::end() const {
 	return Vector<T>::Iterator(&vContainer[vSize]);
 }
 
