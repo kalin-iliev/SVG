@@ -1,1 +1,2 @@
-This is a project, part of the course OOP, taking place in the Faculty of Mathematics and Informatics of the Sofia University. For any reference about the project and how to put it in work check folder docs for the documentation of the project. The documentation currently is only written in bulgarian.
+# SVG Parser
+The full task requirements can be found [here](https://github.com/kalin-iliev/SVG/blob/master/Task.md)
