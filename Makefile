@@ -1,7 +1,9 @@
 GCC=g++
+ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ShapeAsText.o obj/ConsoleHelpers.o obj/InputHandler.o obj/StringHelpers.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
+ALL_HEADER_FILES=-Isrc/shared/utils -Isrc/shared -Isrc/shapes -Isrc/containers -Isrc -Isrc/attributes
 
 all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ShapeAsText.o ConsoleHelpers.o InputHandler.o StringHelpers.o Command.o SVGAppWrapper.o SVGShapesManager.o
-	$(GCC) -o svg obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ShapeAsText.o obj/ConsoleHelpers.o obj/InputHandler.o obj/StringHelpers.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o src/Main.cpp -Isrc/shared/utils -Isrc/shared -Isrc/shapes -Isrc/containers -Isrc -Isrc/attributes
+	$(GCC) -o svg src/Main.cpp $(ALL_O_FILES) $(ALL_HEADER_FILES)
 
 directories:
 	mkdir -p obj
@@ -52,7 +54,7 @@ SVGShapesManager.o: src/SVGShapesManager.h src/shapes/Shape.h src/shapes/Line.h 
 	$(GCC) -c -o obj/SVGShapesManager.o src/SVGShapesManager.cpp -Isrc/shapes -Isrc/containers -Isrc/attributes -Isrc/shared -Isrc/shared/utils
 
 tests: tests/acceptance_tests/main.cpp
-	$(GCC) -o runTests -Wall -g -pthread tests/acceptance_tests/main.cpp -lgtest -lgtest_main -lpthread
+	$(GCC) -o runTests -Wall -g -pthread tests/acceptance_tests/main.cpp $(ALL_O_FILES) -lgtest -lgtest_main -lpthread $(ALL_HEADER_FILES)
 
 clean:
 	rm -f runTests
