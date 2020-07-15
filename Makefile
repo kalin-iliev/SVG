@@ -1,26 +1,26 @@
 GCC=g++
-ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ConsoleHelpers.o obj/InputHandler.o obj/StringHelpers.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
+ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ConsoleHelpers.o obj/InputHandler.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
 ALL_HEADER_FILES=-Isrc/shared/utils -Isrc/shared -Isrc/shapes -Isrc/containers -Isrc -Isrc/attributes
 
-all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ConsoleHelpers.o InputHandler.o StringHelpers.o Command.o SVGAppWrapper.o SVGShapesManager.o
+all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ConsoleHelpers.o InputHandler.o Command.o SVGAppWrapper.o SVGShapesManager.o
 	$(GCC) -o svg src/Main.cpp $(ALL_O_FILES) $(ALL_HEADER_FILES)
 
 directories:
 	mkdir -p obj
 
-Attribute.o: src/attributes/Attribute.cpp src/attributes/Attribute.h src/containers/String.h src/shared/utils/StringHelpers.h
+Attribute.o: src/attributes/Attribute.cpp src/attributes/Attribute.h src/containers/String.h
 	$(GCC) -c -o obj/Attribute.o src/attributes/Attribute.cpp -Isrc/containers -Isrc/shared/utils
 
-CommonAttributes.o: src/attributes/CommonAttributes.cpp src/attributes/CommonAttributes.h src/containers/String.h src/shared/utils/StringHelpers.h src/containers/Vector.h src/attributes/Attribute.h src/shared/Constants.h
+CommonAttributes.o: src/attributes/CommonAttributes.cpp src/attributes/CommonAttributes.h src/containers/String.h src/containers/Vector.h src/attributes/Attribute.h src/shared/Constants.h
 	$(GCC) -c -o obj/CommonAttributes.o src/attributes/CommonAttributes.cpp -Isrc/containers -Isrc/shared/utils -Isrc/shared
 
-MainAttributes.o: src/attributes/MainAttributes.cpp src/attributes/MainAttributes.h src/containers/String.h src/containers/Vector.h src/attributes/Attribute.h src/attributes/CommonAttributes.h src/shared/utils/StringHelpers.h
+MainAttributes.o: src/attributes/MainAttributes.cpp src/attributes/MainAttributes.h src/containers/String.h src/containers/Vector.h src/attributes/Attribute.h src/attributes/CommonAttributes.h
 	$(GCC) -c -o obj/MainAttributes.o src/attributes/MainAttributes.cpp -Isrc/containers -Isrc/shared/utils -Isrc/shared
 
-String.o: src/containers/String.cpp src/containers/String.h src/shared/utils/StringHelpers.h
+String.o: src/containers/String.cpp src/containers/String.h
 	$(GCC) -c -o obj/String.o src/containers/String.cpp -Isrc/containers -Isrc/shared/utils
 
-Shape.o: src/shapes/Shape.h src/shapes/Shape.cpp src/attributes/CommonAttributes.h src/attributes/MainAttributes.h src/containers/Vector.h src/shared/utils/StringHelpers.h src/shared/Constants.h
+Shape.o: src/shapes/Shape.h src/shapes/Shape.cpp src/attributes/CommonAttributes.h src/attributes/MainAttributes.h src/containers/Vector.h src/shared/Constants.h
 	$(GCC) -c -o obj/Shape.o src/shapes/Shape.cpp -Isrc/attributes -Isrc/containers -Isrc/shared/utils -Isrc/shared
 
 Circle.o: Shape.o src/shapes/Circle.cpp src/shapes/Circle.h
@@ -38,10 +38,7 @@ ConsoleHelpers.o: src/shared/utils/ConsoleHelpers.h src/shared/utils/ConsoleHelp
 InputHandler.o: src/shared/utils/InputHandler.h src/attributes/Attribute.h src/SVGShapesManager.h src/shared/Constants.h
 	$(GCC) -c -o obj/InputHandler.o src/shared/utils/InputHandler.cpp -Isrc/shared -Isrc/shared/utils -Isrc  -Isrc/shapes -Isrc/attributes -Isrc/containers
 
-StringHelpers.o: src/shared/utils/StringHelpers.h
-	$(GCC) -c -o obj/StringHelpers.o src/shared/utils/StringHelpers.cpp
-
-Command.o: src/shared/Command.h src/containers/String.h src/containers/Vector.h src/shared/utils/StringHelpers.h
+Command.o: src/shared/Command.h src/containers/String.h src/containers/Vector.h
 	$(GCC) -c -o obj/Command.o src/shared/Command.cpp -Isrc/containers -Isrc/shared/utils
 
 SVGAppWrapper.o: src/SVGAppWrapper.h src/shared/utils/ConsoleHelpers.h
