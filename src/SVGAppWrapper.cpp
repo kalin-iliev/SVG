@@ -1,5 +1,6 @@
 #include "SVGAppWrapper.h"
-void SVGAppWrapper::start() {
+void SVGAppWrapper::start()
+{
 	bool appStarted = true;
 	ConsoleHelpers consoleHelp;
 	SVGShapesManager newManager;
