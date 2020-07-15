@@ -39,7 +39,7 @@ void InputHandler::saveFileAs(SVGShapesManager& currentManager, const String& pa
 }
 
 String InputHandler::getRealParamValue(const String& currentParameter) {
-	int equalIndex = currentParameter.has('=');
+	int equalIndex = currentParameter.firstIndexOf('=');
 	if (equalIndex > -1)
 	{
 		int parameterSize = currentParameter.size();
@@ -125,8 +125,8 @@ int InputHandler::findParameter(const String& paramName, const Vector<String>& p
 	for (int i = 0; i < size; i++)
 	{
 		String currentPar = parameters[i];
-		if (currentPar.beginWith(paramName)) {
-			int indexEqual = currentPar.has('=');
+		if (currentPar.beginsWith(paramName)) {
+			int indexEqual = currentPar.firstIndexOf('=');
 			if (indexEqual > -1 && indexEqual != paramName.size())
 				return index;
 			else
@@ -145,8 +145,8 @@ unsigned InputHandler::parameterOccurence(const String& paramName, const Vector<
 	for (int i = 0; i < size; i++)
 	{
 		String currentPar = parameters[i];
-		if (currentPar.beginWith(paramName)) {
-			int indexEqual = currentPar.has('=');
+		if (currentPar.beginsWith(paramName)) {
+			int indexEqual = currentPar.firstIndexOf('=');
 			if (indexEqual > -1 && indexEqual == paramName.size())
 				count++;
 			else if (indexEqual == -1)
@@ -192,9 +192,9 @@ void InputHandler::translateShapes(SVGShapesManager& currentManager, const Strin
 		if (!isInt(yCoord))
 			throw String("Wrong entered value for index.");
 
-	long int xTranslate = (xCoord) ? xCoord.strToInt() : 0;
-	long int yTranslate = (yCoord) ? yCoord.strToInt() : 0;
-	int indexShape = (index) ? index.strToInt() : -1;
+	long int xTranslate = (xCoord) ? xCoord.toInt() : 0;
+	long int yTranslate = (yCoord) ? yCoord.toInt() : 0;
+	int indexShape = (index) ? index.toInt() : -1;
 	if (xTranslate != 0 || yTranslate != 0)
 	{
 		if (indexShape > -1)
@@ -317,7 +317,7 @@ void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexPara
 	try {
 		if (!isInt(indexParameter))
 			throw String("The index parameter is invalid.");
-		currentManager.removeShape(indexParameter.strToInt());
+		currentManager.removeShape(indexParameter.toInt());
 		std::cout << "Successfully removed shape at this index." << std::endl;
 	}
 	catch (const String& error) {
@@ -336,7 +336,7 @@ bool InputHandler::isCharInt(char c) {
 bool InputHandler::isInt(const String& text) {
 	int size = text.size();
 	int start = 0;
-	int dashIndex = text.has('-');
+	int dashIndex = text.firstIndexOf('-');
 	if (dashIndex > -1 && dashIndex != 0)
 		return false;
 	if (dashIndex > -1) start++;

@@ -302,7 +302,7 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 			{
 				appendString(fileLine, buffer, pos);
 
-				if (fileLine.has("svg") > -1 && fileLine.has('!') == -1)
+				if (fileLine.contains("svg") && !fileLine.contains('!'))
 				{
 					if (!foundFirstSvg)
 						foundFirstSvg = true;

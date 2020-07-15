@@ -24,7 +24,7 @@ public:
 	Vector<Attribute> getMainAttributes() const { return Vector<Attribute>(); }
 
 	void translateCoordinates(long int, long int) override { 
-		std::cout << "The shape is invalid. It has no attributes to translate.";
+		std::cout << "The shape is invalid. It contains no attributes to translate.";
 		return; 
 	}
 

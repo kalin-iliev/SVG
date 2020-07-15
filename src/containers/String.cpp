@@ -1,17 +1,19 @@
 #include "String.h"
 
-void String::setStr(const char* newStr) {
-	if (!newStr)
+void String::setData(const char* newValue) {
+	if (!newValue)
 	{
-		setStr("");
+		setData("");
 	}
-	length = strlen(newStr);
-	stringData = new char[length + 1];
-	strcpy(stringData, newStr);
+
+	this->length = strlen(newValue);
+	this->data = new char[this->length + 1];
+	strcpy(this->data, newValue);
 }
 
-void String::copy(const String& secondStr) {
-	setStr(secondStr.stringData);
+void String::copy(const String& secondString)
+{
+	setData(secondString.data);
 }
 
 bool String::isCharLetter(char c) const {
@@ -28,238 +30,383 @@ bool String::isCharLower(char c) const {
 
 String::String(unsigned size) {
 	if(!size)
-		setStr("");
-	else if(size > 0)
 	{
-		stringData = new char[size + 1];
-		stringData[size] = 0;
-		length = size;
+		setData("");
+	}
+
+	else
+	{
+		this->data = new char[size + 1];
+		this->data[size] = '\0';
+		this->length = size;
 	}
 }
 
-String::String(const char* newStr) {
-	setStr(newStr);
-}
-
-String::String(const String& secondStr) {
-	if (this != &secondStr)
-		copy(secondStr);
-}
-
-String& String::operator=(const String& secondStr) {
-	if (this != &secondStr)
-	{
-		delete[] stringData;
-		copy(secondStr);
-	}
-	return *this;
-}
-
-String::~String() {
-	delete[] stringData;
-}
-
-String operator+(const String& firstStr, const String& secondStr) {
-	char* newText = new char[firstStr.size() + 1];
-	strcpy(newText, firstStr.stringData);
-	newText = StringHelpers::appendArray(newText, secondStr.stringData);
-	String newString(newText);
-	delete[] newText;
-	return newString;
-}
-
-String operator+(const char* firstStr, const String& currentStr) {
-	String arrayToString = String(firstStr);
-	return operator+(arrayToString, currentStr);
-}
-
-String operator+(const String& currentStr, const char* secondStr) {
-	String arrayToString = String(secondStr);
-	return operator+(currentStr, arrayToString);
-}
-
-String operator+(const char symbol, const String& currentStr) {
-	char* newStr = new char[strlen(currentStr.stringData) + 1];
-	strcpy(newStr, currentStr.stringData);
-	newStr = StringHelpers::prependSymbol(newStr, symbol);
-	String newString(newStr);
-	delete[] newStr;
-	return newString;
-}
-
-String operator+(const String& currentStr, const char symbol)
+String::String(const char* newStr)
 {
-	String newString = currentStr;
-	return newString += symbol;
+	setData(newStr);
 }
 
-String& String::operator+=(const String& secondStr) {
-	stringData = StringHelpers::appendArray(stringData, secondStr.stringData);
-	length += secondStr.size();
+String::String(const String& secondString)
+{
+	if (this != &secondString)
+	{
+		copy(secondString);
+	}
+}
+
+String& String::operator=(const String& secondString)
+{
+	if (this != &secondString)
+	{
+		delete[] data;
+		copy(secondString);
+	}
+
 	return *this;
 }
 
-String& String::operator+=(const char* secondStr) {
-	return *this += String(secondStr);
+String::~String()
+{
+	delete[] data;
 }
 
-String& String::operator+=(const char symbol) {
-	stringData = StringHelpers::appendSymbol(stringData, symbol);
-	length++;
+String operator+(const String& firstString, const String& secondString)
+{
+	String resultString(firstString);
+	resultString += secondString;
+	return resultString;
+}
+
+String operator+(const char* firstString, const String& secondString)
+{
+	String resultString(firstString);
+	resultString += secondString;
+	return resultString;
+}
+
+String operator+(const String& firstString, const char* secondString)
+{
+	String resultString(firstString);
+	resultString += secondString;
+	return resultString;
+}
+
+String operator+(const char symbol, const String& secondString)
+{
+	String resultString;
+	resultString += symbol;
+	resultString += secondString;
+	return resultString;
+}
+
+String operator+(const String& firstString, const char symbol)
+{
+	String resultString;
+	resultString += firstString;
+	resultString += symbol;
+
+	return resultString;
+}
+
+String& String::operator+=(const String& secondString)
+{
+	return *this += secondString.data;
+}
+
+String& String::operator+=(const char* secondString)
+{
+	int newLength = strlen(secondString) + this->length + 1;
+	char* newData = new (std::nothrow) char[newLength];
+	if (!newData)
+	{
+		return *this;
+	}
+
+	strncpy(newData, this->data, this->length);
+	strncpy(newData + this->length, secondString, strlen(secondString));
+	newData[newLength - 1] = '\0';
+	delete[] this->data;
+	this->data = newData;
+	this->length = newLength - 1;
+
+	return *this;
+
+}
+
+String& String::operator+=(const char symbol)
+{
+	char* newData = new (std::nothrow) char[this->length + 2];
+	if (!newData)
+	{
+		return *this;
+	}
+
+	strncpy(newData, this->data, this->length);
+	newData[this->length] = symbol;
+	newData[this->length + 1] = '\0';
+
 	return *this;
 }
 
-bool operator==(const String& firstStr, const String& secondStr) {
-	bool compared = strcmp(firstStr.stringData, secondStr.stringData);
-	return !compared;
+bool operator==(const String& firstString, const String& secondString)
+{
+	bool areDirrefent = strcmp(firstString.data, secondString.data);
+	return !areDirrefent;
 }
 
-bool operator==(const char* firstStr, const String& currentStr) {
-	return String(firstStr) == currentStr;
+bool operator==(const char* firstString, const String& secondString)
+{
+	return String(firstString) == secondString;
 }
 
-bool operator==(const String& currentStr, const char* secondStr) {
-	return currentStr == String(secondStr);
+bool operator==(const String& firstString, const char* secondString)
+{
+	return firstString == String(secondString);
 }
 
-bool operator==(const char symbol, const String& currentStr) {
-	if (currentStr.length != 1)
+bool operator==(const char symbol, const String& secondString)
+{
+	return secondString != symbol;
+}
+
+bool operator==(const String& firstString, const char symbol)
+{
+	if (firstString.length != 1)
+	{
 		return false;
-	return currentStr.stringData[0] == symbol;
+	}
+
+	return firstString.data[0] == symbol;
 }
 
-bool operator==(const String& currentStr, const char symbol) {
-	if (currentStr.length != 1)
-		return false;
-	return currentStr.stringData[0] == symbol;
-}
-
-
-char String::operator[](unsigned index) const {
+char String::operator[](unsigned index) const
+{
 	if (!(index >= 0 && index <= length))
 	{
 		throw std::out_of_range("The index is out of bounds!");
 	}
-	return stringData[index];
+
+	return data[index];
 }
 
-char& String::operator[](unsigned index) {
+char& String::operator[](unsigned index)
+{
 	if (!(index >= 0 && index <= length))
 	{
 		throw std::out_of_range("The index is out of bounds!");
 	}
-	return stringData[index];
+	return data[index];
 }
 
-std::ostream& operator << (std::ostream& out, const String& currentStr) {
-	out << currentStr.stringData;
+std::ostream& operator << (std::ostream& out, const String& currentString)
+{
+	out << currentString.data;
 	return out;
 }
 
-std::istream& operator >> (std::istream& in, String& currentStr) {
+std::istream& operator >> (std::istream& in, String& currentString)
+{
 	char buffer[MAX_READ_SIZE];
 	in.getline(buffer, MAX_READ_SIZE);
-	currentStr = buffer;
+	currentString = buffer;
 	return in;
 }
 
-int String::strToInt() const {
-	return atoi(stringData);
+int String::toInt() const
+{
+	return atoi(data);
 }
 
-float String::strToFloat() const {
-	return atof(stringData);
+float String::toFloat() const
+{
+	return atof(data);
 }
 
-bool String::beginWith(char c) const {
-	return stringData[0] == c;
+bool String::beginsWith(char c) const
+{
+	return data[0] == c;
 }
 
-bool String::beginWith(const String& other) const {
-	return StringHelpers::strBegin(stringData, other.stringData);
-}
-
-int String::has(char c) const {
-	return StringHelpers::subSymbolIndex(stringData, c);
-}
-
-int String::has(const String& other) const {
-	return StringHelpers::subStrIndex(stringData, other.stringData);
-}
-
-int String::firstIndexOf(char c) const {
-	return has(c);
-}
-
-int String::firstIndexOf(const String& subText) const {
-	return has(subText);
-}
-
-int String::lastIndexOf(char c) const {
-	for (int i = length - 1; i >= 0; i--)
+bool String::beginsWith(const String& other) const 
+{
+	if (this->length < other.length)
 	{
-		if (stringData[i] == c)
+		return false;
+	}
+
+	for (int i = 0; i < this->length && i < other.length; ++i)
+	{
+		if (this->data[i] != other.data[i])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool String::contains(char c) const
+{
+	return this->firstIndexOf(c) != -1;
+}
+
+bool String::contains(const String& other) const
+{
+	return this->firstIndexOf(other) != -1;
+}
+
+int String::firstIndexOf(char c) const
+{
+	for (int i = 0; i < this->length; ++i)
+	{
+		if (this->data[i] == c)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+int String::firstIndexOf(const String& subStr) const
+{
+	for (int i = 0; i < this->length - subStr.length + 1; ++i)
+	{
+		bool found = true;
+		for (int j = 0; j < subStr.length && this->data[i+j]; ++j)
+		{
+			if (this->data[i + j] != subStr.data[j])
+			{
+				found = false;
+				break;
+			}	
+		}
+		if (found)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int String::lastIndexOf(char c) const
+{
+	for (int i = this->length - 1; i >= 0; i--)
+	{
+		if (data[i] == c)
 			return i;
 	}
 
 	return -1;
 }
 
-int String::lastIndexOf(const String& subStr) const {
-	int lastIndex = -1;
-	const char* str = stringData;
-	int subIndex = StringHelpers::subStrIndex(str, subStr.stringData);
-	while (subIndex > -1)
+int String::lastIndexOf(const String& subStr) const
+{
+	for (int i = this->length - subStr.length; i >= 0 ; --i)
 	{
-		str += (subIndex + strlen(subStr.stringData));
-		subIndex = StringHelpers::subStrIndex(str, subStr.stringData);
-		lastIndex = subIndex;
+		bool found = true;
+		for (int j = subStr.length - 1; j >= 0 && this->data[i+j]; --j)
+		{
+			if (this->data[i + j] != subStr.data[j])
+			{
+				found = false;
+				break;
+			}	
+		}
+		if (found)
+		{
+			return i;
+		}
 	}
-	return lastIndex;
+
+	return -1;
 }
 
-unsigned String::countSymbol(char c) const {
+unsigned String::numberOfOccurrences(char c) const
+{
 	int count = 0;
-	const char* str = stringData;
+	const char* str = data;
 	while (*str)
 	{
 		if (*str == c)
+		{
 			count++;
+		}
+
 		str++;
 	}
 
 	return count;
 }
 
-unsigned String::countSubstr(const String& subStr) const {
+unsigned String::numberOfOccurrences(const String& subStr) const
+{
 	int count = 0;
-	const char* str = stringData;
-	int subIndex = StringHelpers::subStrIndex(str, subStr.stringData);
-	while (subIndex > -1)
+	String originalString(*this);
+	int subIndex = originalString.firstIndexOf(subStr);
+	while (subIndex != -1)
 	{
-		str += (subIndex + strlen(subStr.stringData));
-		subIndex = StringHelpers::subStrIndex(str, subStr.stringData);
 		++count;
+		originalString.data += (subIndex + subStr.length);
+		subIndex = originalString.firstIndexOf(subStr);
 	}
+
 	return count;
 }
 
-String String::toLowerCase() const {
+String String::toLowerCase() const
+{
 	char* result = new char[length + 1];
 	for (int i = 0; i < length; i++)
-		result[i] = (isCharUpper(stringData[i])) ? stringData[i] ^ 32 : stringData[i];
-	result[length] = 0;
-	String newString(result);
+	{
+		if (isCharUpper(data[i]))
+		{
+			// TODO create util
+			result[i] = data[i] - 'A' + 'a';
+		}
+		else
+		{
+			result[i] = data[i];
+		}
+	}
+	result[length] = '\0';
+	String lowerString(result);
 	delete[] result;
-	return newString;
+	return lowerString;
 }
 
 String String::toUpperCase() const {
 	char* result = new char[length + 1];
 	for (int i = 0; i < length; i++)
-		result[i] = (isCharLower(stringData[i])) ? stringData[i] ^ 32 : stringData[i];
-	result[length] = 0;
-	String newString(result);
+	{
+		if (isCharLower(data[i]))
+		{
+			// TODO create util
+			result[i] = data[i] - 'a' + 'A';
+		}
+		else
+		{
+			result[i] = data[i];
+		}
+	}
+	result[length] = '\0';
+	String upperString(result);
 	delete[] result;
-	return newString;
+	return upperString;
+}
+
+unsigned String::size() const
+{
+	return length;
+}
+
+const char* String::toCharArray() const
+{
+	return data;
+}
+
+String::operator bool() const
+{
+	return length > 0;
 }

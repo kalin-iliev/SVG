@@ -22,7 +22,7 @@ void Circle::init(const String& text) {
 	try {
 		attributes = MainAttributes(text, "circle");
 		type = "circle";
-		long int radius = getAttribute("r").getValue().strToInt();
+		long int radius = getAttribute("r").getValue().toInt();
 		if (radius < 1)
 			throw String("Circle is invalid. Radius can't be less than 1.");
 		setText();
@@ -68,8 +68,8 @@ Circle& Circle::operator=(const Circle& other) {
 void Circle::translateCoordinates(long int incX, long int incY) {
 	unsigned cxStr = attributes.indexOfCurrentAttribute("cx");
 	unsigned cyStr = attributes.indexOfCurrentAttribute("cy");
-	long int cx = attributes[cxStr].getValue().strToInt();
-	long int cy = attributes[cyStr].getValue().strToInt();
+	long int cx = attributes[cxStr].getValue().toInt();
+	long int cy = attributes[cyStr].getValue().toInt();
 	cx += incX;
 	cy += incY;
 	String newCx;
@@ -96,12 +96,12 @@ void Circle::print() const {
 }
 
 bool Circle::fitsInCircle(const Circle& other) const {
-	long int cx = getAttribute("cx").getValue().strToInt();
-	long int cy = getAttribute("cy").getValue().strToInt();
-	long int radius = getAttribute("r").getValue().strToInt();
-	long int otherCx = other.getAttribute("cx").getValue().strToInt();
-	long int otherCy = other.getAttribute("cy").getValue().strToInt();
-	long int otherRadius = other.getAttribute("r").getValue().strToInt();
+	long int cx = getAttribute("cx").getValue().toInt();
+	long int cy = getAttribute("cy").getValue().toInt();
+	long int radius = getAttribute("r").getValue().toInt();
+	long int otherCx = other.getAttribute("cx").getValue().toInt();
+	long int otherCy = other.getAttribute("cy").getValue().toInt();
+	long int otherRadius = other.getAttribute("r").getValue().toInt();
 	long int substractRadius = (otherRadius - radius);
 	long int distanceRadius = (cx - otherCx) * (cx - otherCx) + (cy - otherCy) * (cy - otherCy);
 	if (distanceRadius <= substractRadius)
@@ -110,14 +110,14 @@ bool Circle::fitsInCircle(const Circle& other) const {
 }
 
 bool Circle::fitsInRect(const Rectangle& other)  const {
-	long int cx = getAttribute("cx").getValue().strToInt();
-	long int cy = getAttribute("cy").getValue().strToInt();
-	long int radius = getAttribute("r").getValue().strToInt();
+	long int cx = getAttribute("cx").getValue().toInt();
+	long int cy = getAttribute("cy").getValue().toInt();
+	long int radius = getAttribute("r").getValue().toInt();
 
-	long int rectX = other.getAttribute("x").getValue().strToInt();
-	long int rectY = other.getAttribute("y").getValue().strToInt();
-	long int rectWidth = other.getAttribute("width").getValue().strToInt();
-	long int rectHeight = other.getAttribute("height").getValue().strToInt();
+	long int rectX = other.getAttribute("x").getValue().toInt();
+	long int rectY = other.getAttribute("y").getValue().toInt();
+	long int rectWidth = other.getAttribute("width").getValue().toInt();
+	long int rectHeight = other.getAttribute("height").getValue().toInt();
 
 	if (!(cx > rectX && cx < (rectX + rectWidth)))
 		return false;

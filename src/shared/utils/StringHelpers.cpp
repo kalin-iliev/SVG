@@ -36,7 +36,7 @@ char* StringHelpers::prependSymbol(char* dest, const char symbol) {
 	return newStr;
 }
 
-char* StringHelpers::appendArray(char* dest, const char* source) {
+char* StringHelpers::appendArray(char* dest, const char* source) { // TODO delete
 	int appendSize = strlen(source);
 	int newSize = strlen(dest) + appendSize + 1;
 	char* newDest = new (std::nothrow) char[newSize];
@@ -124,14 +124,14 @@ int StringHelpers::subStrIndex(const char* text, const char* subText) {
 	return -1;
 }
 
-bool StringHelpers::strBegin(const char* currentStr, const char* comparingString) {
-	if (strlen(currentStr) < strlen(comparingString))
+bool StringHelpers::strBegin(const char* currentString, const char* comparingString) {
+	if (strlen(currentString) < strlen(comparingString))
 		return false;
-	while (*comparingString && *currentStr) {
-		if (*comparingString != *currentStr)
+	while (*comparingString && *currentString) {
+		if (*comparingString != *currentString)
 			return false;
 		++comparingString;
-		++currentStr;
+		++currentString;
 	}
 	return true;
 }

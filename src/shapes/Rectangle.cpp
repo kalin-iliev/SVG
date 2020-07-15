@@ -17,8 +17,8 @@ void Rectangle::init(const String& text) {
 	try {
 		attributes = MainAttributes(text, "rect");
 		type = "rect";
-		long int width = getAttribute("width").getValue().strToInt();
-		long int height = getAttribute("height").getValue().strToInt();
+		long int width = getAttribute("width").getValue().toInt();
+		long int height = getAttribute("height").getValue().toInt();
 		if (!(width >= 1) || !(height >= 1))
 			throw String("Height and width can't be less than 1.");
 		setText();
@@ -64,8 +64,8 @@ void Rectangle::copy(const Rectangle& other) {
 void Rectangle::translateCoordinates(long int incX, long int incY) {
 	unsigned xStr = attributes.indexOfCurrentAttribute("x");
 	unsigned yStr = attributes.indexOfCurrentAttribute("y");
-	long int x = attributes[xStr].getValue().strToInt();
-	long int y = attributes[yStr].getValue().strToInt();
+	long int x = attributes[xStr].getValue().toInt();
+	long int y = attributes[yStr].getValue().toInt();
 	x += incX;
 	y += incY;
 	String newX;
@@ -92,15 +92,15 @@ void Rectangle::print() const {
 }
 
 bool Rectangle::fitsInRect(const Rectangle& other) const {
-	long int currX = getAttribute("x").getValue().strToInt();
-	long int currY = getAttribute("y").getValue().strToInt();
-	long int currWidth = getAttribute("width").getValue().strToInt();
-	long int currHeight = getAttribute("height").getValue().strToInt();
+	long int currX = getAttribute("x").getValue().toInt();
+	long int currY = getAttribute("y").getValue().toInt();
+	long int currWidth = getAttribute("width").getValue().toInt();
+	long int currHeight = getAttribute("height").getValue().toInt();
 	
-	long int otherX = other.getAttribute("x").getValue().strToInt();
-	long int otherY = other.getAttribute("y").getValue().strToInt();
-	long int otherWidth = other.getAttribute("width").getValue().strToInt();
-	long int otherHeight = other.getAttribute("height").getValue().strToInt();
+	long int otherX = other.getAttribute("x").getValue().toInt();
+	long int otherY = other.getAttribute("y").getValue().toInt();
+	long int otherWidth = other.getAttribute("width").getValue().toInt();
+	long int otherHeight = other.getAttribute("height").getValue().toInt();
 
 	if ((((currX >= otherX) && (currX + currWidth <= otherX + otherWidth)) && ((currY >= otherY) && (currY + currHeight <= otherY + otherHeight))))
 		return true;
@@ -108,14 +108,14 @@ bool Rectangle::fitsInRect(const Rectangle& other) const {
 }
 
 bool Rectangle::fitsInCircle(const Circle& other) const {
-	long int currX = getAttribute("x").getValue().strToInt();;
-	long int currY = getAttribute("y").getValue().strToInt();;
-	long int width = getAttribute("width").getValue().strToInt();;
-	long int height = getAttribute("height").getValue().strToInt();;
+	long int currX = getAttribute("x").getValue().toInt();;
+	long int currY = getAttribute("y").getValue().toInt();;
+	long int width = getAttribute("width").getValue().toInt();;
+	long int height = getAttribute("height").getValue().toInt();;
 
-	long int cx = other.getAttribute("cx").getValue().strToInt();;
-	long int cy = other.getAttribute("cy").getValue().strToInt();;
-	long int radius = other.getAttribute("r").getValue().strToInt();;
+	long int cx = other.getAttribute("cx").getValue().toInt();;
+	long int cy = other.getAttribute("cy").getValue().toInt();;
+	long int radius = other.getAttribute("r").getValue().toInt();;
 
 	bool rectPointInCircle1 = ( ((cx - currX) * (cx - currX))
 							+ ((cy - currY) * (cy - currY)) ) <= (radius * radius);

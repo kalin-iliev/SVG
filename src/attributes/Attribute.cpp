@@ -4,16 +4,16 @@ bool Attribute::isInt(char c) {
 	return (c >= '0' && c <= '9');
 }
 
-bool Attribute::isInt(const String& currentStr) {
-	int size = currentStr.size();
+bool Attribute::isInt(const String& currentString) {
+	int size = currentString.size();
 	int start = 0;
-	int dashIndex = currentStr.has('-');
+	int dashIndex = currentString.firstIndexOf('-');
 	if (dashIndex > -1 &&  dashIndex != 0)
 		return false;
 	if (dashIndex > -1) start++;
 	for (int i = start; i < size; i++)
 	{
-		if (!isInt(currentStr[i]))
+		if (!isInt(currentString[i]))
 			return false;
 	}
 
@@ -28,9 +28,9 @@ String Attribute::getAttrValue(const String& attribute) {
 	char* attrValue = nullptr;
 	int lenValue = 0;
 	int length = 0;
-	if (attribute.has('"') == -1)
+	if (!attribute.contains('"'))
 		return attrValue;
-	if (attribute.countSymbol('"') != 2)
+	if (attribute.numberOfOccurrences('"') != 2)
 		return attrValue;
 	while (attribute[length]) {
 		while (attribute[length] && (isLetter(attribute[length]) || attribute[length] == '-'))
@@ -80,7 +80,7 @@ String Attribute::getAttrName(const String& attribute) {
 	char* attrName = nullptr;
 	int lenValue = 0;
 	int length = 0;
-	if (attribute.has('=') == -1)
+	if (!attribute.contains('='))
 		return attrName;
 
 	while (attribute[length]) {

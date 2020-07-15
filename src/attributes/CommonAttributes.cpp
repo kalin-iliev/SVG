@@ -5,7 +5,7 @@ int CommonAttributes::findAttributeIndex(const String& attributeName, const Vect
 	int size = extractedAttributes.size();
 	for (int i = 0; i < size; i++)
 	{
-		if (extractedAttributes[i].beginWith(attributeName) && extractedAttributes[i].has('=') == attributeName.size())
+		if (extractedAttributes[i].beginsWith(attributeName) && extractedAttributes[i].firstIndexOf('=') == attributeName.size())
 			return i;
 	}
 	return -1;

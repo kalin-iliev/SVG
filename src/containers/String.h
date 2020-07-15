@@ -1,4 +1,4 @@
-#pragma once
+#pragma once // TODO remove pragma once's
 #include <iostream>
 #include <string.h>
 #include "StringHelpers.h"
@@ -8,62 +8,63 @@ const int MAX_READ_SIZE = 1024;
 class String
 {
 
+// TODO place public methods first
 private:
-	char* stringData;
+	char* data;
 	unsigned length;
 private:
-	void setStr(const char* newStr);
-	void copy(const String& secondStr);
-	bool isCharLetter(char c) const;
-	bool isCharUpper(char c) const;
-	bool isCharLower(char c) const;
+	void setData(const char* newValue);
+	void copy(const String& secondString);
+	bool isCharLetter(char c) const; // TIDO extract to utils
+	bool isCharUpper(char c) const; // TIDO extract to utils
+	bool isCharLower(char c) const; // TIDO extract to utils
 public:
 	String(unsigned size = 0);
 	String(const char* data);
-	String(const String& secondStr);
-	String& operator=(const String& secondStr);
+	String(const String& secondString);
+	String& operator=(const String& secondString);
 	~String();
 
-	friend bool operator==(const String& firstStr, const String& secondStr);
-	friend bool operator==(const char* firstStr, const String& currentStr);
-	friend bool operator==(const String& currentStr, const char* secondStr);
-	friend bool operator==(const char symbol, const String& currentStr);
-	friend bool operator==(const String& currentStr, const char symbol);
+	friend bool operator==(const String& firstString, const String& secondString);
+	friend bool operator==(const char* firstString, const String& currentString);
+	friend bool operator==(const String& currentString, const char* secondString);
+	friend bool operator==(const char symbol, const String& currentString);
+	friend bool operator==(const String& currentString, const char symbol);
 	
-	String& operator +=(const String& secondStr);
-	String& operator +=(const char* secondStr);
+	String& operator +=(const String& other);
+	String& operator +=(const char* other);
 	String& operator +=(const char symbol);
 
-	friend String operator+(const String& firstStr, const String& secondStr);
-	friend String operator+(const char* firstStr, const String& currentStr);
-	friend String operator+(const String& currentStr, const char* secondStr);
-	friend String operator+(const char symbol, const String& currentStr);
-	friend String operator+(const String& currentStr, const char symbol);
+	friend String operator+(const String& firstString, const String& secondString);
+	friend String operator+(const char* firstString, const String& secondString);
+	friend String operator+(const String& firstString, const char* secondString);
+	friend String operator+(const char symbol, const String& currentString);
+	friend String operator+(const String& firstString, const char symbol);
 	
 	char operator[](unsigned index) const;
 	char& operator[](unsigned index);
 
-	unsigned size() const { return length; }
+	unsigned size() const;
 
-	friend std::ostream& operator << (std::ostream& outputstream, const String& currentStr);
-	friend std::istream& operator >> (std::istream& inputstream, String& currentStr);
+	friend std::ostream& operator << (std::ostream& outputStream, const String& currentString);
+	friend std::istream& operator >> (std::istream& inputStream, String& currentString);
 
-	int strToInt() const;
-	float strToFloat() const;
-	bool beginWith(char) const;
-	bool beginWith(const String&) const;
-	int has(char) const;
-	int has(const String&) const;
+	int toInt() const;
+	float toFloat() const;
+	bool beginsWith(char) const;
+	bool beginsWith(const String&) const;
+	bool contains(char c) const;
+	bool contains(const String&) const;
 	int firstIndexOf(char c) const;
 	int firstIndexOf(const String&) const;
 	int lastIndexOf(char c) const;
 	int lastIndexOf(const String&) const;
-	unsigned countSymbol(char c) const;
-	unsigned countSubstr(const String&) const;
+	unsigned numberOfOccurrences(char c) const;
+	unsigned numberOfOccurrences(const String&) const;
 	String toLowerCase() const;
 	String toUpperCase() const;
-	const char* toCharArray() const { return stringData; }
+	const char* toCharArray() const;
 
-	operator bool() const { return length > 0; }
+	operator bool() const;
 };
 
