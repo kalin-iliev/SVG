@@ -29,8 +29,8 @@ private:
 	bool isInt(const String& text);
 	bool isCharInt(char c);
 	String getRealParamValue(const String& parameter);
-	int findParameter(const String& paramName, const Vector<String>& parameters);
-	unsigned parameterOccurence(const String& paramName, const Vector<String>& parameters);
+	int findParameterIndex(const String& paramName, const Vector<String>& parameters);
+	unsigned parameterOccurences(const String& paramName, const Vector<String>& parameters);
 public:
 	bool hasShapes(const SVGShapesManager&);
 	bool isFileOpen() const { return currentOpenFile; }
