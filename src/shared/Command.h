@@ -7,20 +7,19 @@ private:
 	String name;
 	Vector<String> parameters;
 private:
-	bool isCommandLetter(char c);
-	int countCommand(const String& commandText);
+	bool isSymbolValid(char c);
 	int extractCommand(const String& commandText, Vector<String>& words);
 public:
 	Command(const String& text = "");
 	Command(const Command& other);
 	Command& operator=(const Command& other);
-	bool isEmpty() const { return (!name && !parameters.size()); }
+	bool isEmpty() const;
 
-	String getName() const { return name; }
-	Vector<String> getParameters() const { return parameters; }
-	String getParameter(unsigned index) const;
+	String getName() const;
+	Vector<String> getParameters() const;
+	String getParameterByIndex(unsigned index) const;
 	String operator[](unsigned index) const;
-	unsigned size() const { return parameters.size(); }
+	unsigned size() const;
 	friend std::ostream& operator << (std::ostream& out, const Command& currentCommand);
 	friend std::istream& operator >> (std::istream& in, Command& currentCommand);
 };

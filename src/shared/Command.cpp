@@ -1,86 +1,40 @@
 #include "Command.h"
 
-bool Command::isCommandLetter(char c) {
+bool Command::isSymbolValid(char c)
+{
+	// TODO refactor - use isLetter, isNumber from utils
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-		(c == '\\') || (c == '/') ||
+		   (c == '\\') || (c == '/') ||
 		(c == '.') || (c == ':') ||
 		(c >= '0' && c <= '9') ||
 		(c == '_') || (c == '-');
 }
 
-int Command::countCommand(const String& text) {
-	int cnt = 0;
-	bool isEqualFound = false;
-	bool isWordFoundAfterEqual = false;
-	int foundWordAfterEqualSize = 0;
-	int length = 0;
-	while (text[length]) {
-		while (text[length] && !isCommandLetter(text[length]) && text[length] != '=') {  // skip letters to the beginning of a word
-			++length;
-		}
-		if (text[length] && text[length] != '=') {
-			if(!isEqualFound)
-				++cnt;                              // if there is a word, count it
-		}
-		while (text[length] && (isCommandLetter(text[length]) && text[length] != '=')) {           // skip to the end of the word
-			if(isEqualFound)
-				foundWordAfterEqualSize++;
-			if (isWordFoundAfterEqual)
-				isWordFoundAfterEqual = false;
-			++length;
-		}
-		if (isEqualFound)
-		{
-			if (!foundWordAfterEqualSize)
-				return -1;
-			foundWordAfterEqualSize = 0;
-			isWordFoundAfterEqual = true;
-			isEqualFound = false;
-		}
-		while (text[length] && !isCommandLetter(text[length]))
-		{
-			if (text[length] == '=')
-			{
-				if (isWordFoundAfterEqual)
-					return -1;
-
-				if (!isWordFoundAfterEqual && isEqualFound)
-					return -1;
-
-				isEqualFound = true;
-				isWordFoundAfterEqual = false;
-				++length;
-			}
-			else {
-				++length;
-			}
-		}
-	}
-	if (isEqualFound) {
-		return -1;
-	}
-	return cnt;
-}
-
-int Command::extractCommand(const String& text, Vector<String>& words) {
-	int countCommandWords = countCommand(text);
-	if (countCommandWords == -1)
-		throw String("Sorry, the text you typed is invalid.");
+int Command::extractCommand(const String& text, Vector<String>& words)
+{
+	int countCommandWords = 0;
 	bool isEqualFound = false;
 	bool isWordFoundAfterEqual = false;
 	int length = 0;
-	for (int i = 0; i < countCommandWords; i++)
+	while (text[length])
 	{
-		while (text[length] && !isCommandLetter(text[length]) && text[length] != '=') {  // skip letters to the beginning of a word
+		while (text[length] && !isSymbolValid(text[length]))
+		{  // skip letters to the beginning of a word
 			++length;
 		}
-		if (text[length] && text[length] != '=') {
+		if (text[length] && text[length] != '=' && !isEqualFound)
+		{
+			++countCommandWords; // if there is a word, count it
+		}
+
+		if (text[length] && text[length] != '=')
+		{
 			int start = length;
 			int attrSize = 0;
 			int currentSize = 0;
 
-
-			while (text[length] && (isCommandLetter(text[length]) && text[length] != '=')) {           // skip to the end of the word
+			while (text[length] && isSymbolValid(text[length]))
+			{  // skip to the end of the word
 				++attrSize;
 				++length;
 			}
@@ -88,7 +42,7 @@ int Command::extractCommand(const String& text, Vector<String>& words) {
 			{
 				isEqualFound = false;
 			}
-			while (text[length] && !isCommandLetter(text[length]))
+			while (text[length] && !isSymbolValid(text[length]))
 			{
 				if (text[length] == '=')
 				{
@@ -101,7 +55,7 @@ int Command::extractCommand(const String& text, Vector<String>& words) {
 				}
 			}
 
-			while (text[length] && isCommandLetter(text[length]) && isEqualFound)
+			while (text[length] && isSymbolValid(text[length]) && isEqualFound)
 			{
 				++attrSize;
 				++length;
@@ -112,8 +66,10 @@ int Command::extractCommand(const String& text, Vector<String>& words) {
 			String newString(attrSize);
 			for (int i = start; i < length; i++)
 			{
-				if (isCommandLetter(text[i]) || text[i] == '=')
+				if (isSymbolValid(text[i]) || text[i] == '=')
+				{
 					newString[currentSize++] = text[i];
+				}
 			}
 
 			words.push_back(newString);
@@ -122,7 +78,8 @@ int Command::extractCommand(const String& text, Vector<String>& words) {
 	return countCommandWords;
 }
 
-Command::Command(const String& commandText) {
+Command::Command(const String& commandText)
+{
 	if(commandText)
 	{
 		Vector<String> commandWords;
@@ -139,7 +96,8 @@ Command::Command(const String& commandText) {
 	}
 }
 
-Command::Command(const Command& other) {
+Command::Command(const Command& other)
+{
 	if (this != &other)
 	{
 		name = other.name;
@@ -147,7 +105,8 @@ Command::Command(const Command& other) {
 	}
 }
 
-Command& Command::operator=(const Command& other) {
+Command& Command::operator=(const Command& other)
+{
 	if (this != &other)
 	{
 		name = other.name;
@@ -157,18 +116,23 @@ Command& Command::operator=(const Command& other) {
 	return *this;
 }
 
-String Command::getParameter(unsigned index) const {
+String Command::getParameterByIndex(unsigned index) const
+{
 	int size = parameters.size();
 	if (!(index >= 0 && index < size))
+	{
 		throw String("The index is out of bounds.");
+	}
 	return parameters[index];
 }
 
-String Command::operator[](unsigned index) const {
-	return getParameter(index);
+String Command::operator[](unsigned index) const
+{
+	return getParameterByIndex(index);
 }
 
-std::ostream& operator << (std::ostream& out, const Command& currentCommand) {
+std::ostream& operator << (std::ostream& out, const Command& currentCommand)
+{
 	out << "Number of parameters: " << currentCommand.size() << std::endl;
 	out << "Name: " << currentCommand.getName() << ", Parameters: ";
 	int parameterSize = currentCommand.size();
@@ -176,15 +140,38 @@ std::ostream& operator << (std::ostream& out, const Command& currentCommand) {
 	{
 		out << currentCommand[i];
 		if (i != parameterSize - 1)
+		{
 			out << ' ';
+		}
 	}
 	out << std::endl;
 	return out;
 }
 
-std::istream& operator >> (std::istream& in, Command& currentCommand) {
+std::istream& operator >> (std::istream& in, Command& currentCommand)
+{
 	String readString;
 	in >> readString;
 	currentCommand = Command(readString);
 	return in;
+}
+
+bool Command::isEmpty() const
+{
+	return !name && !parameters.size();
+}
+
+String Command::getName() const
+{
+	return name;
+}
+
+Vector<String> Command::getParameters() const
+{
+	return parameters;
+}
+
+unsigned Command::size() const
+{
+	return parameters.size();
 }

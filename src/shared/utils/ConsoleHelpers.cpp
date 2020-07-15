@@ -20,7 +20,7 @@ String ConsoleHelpers::initCommand(const Command& command, SVGShapesManager& sha
 			throw String("Invalid arguments.");
 		}
 
-		handleInput.loadFile(shapesManager, command.getParameter(0));
+		handleInput.loadFile(shapesManager, command.getParameterByIndex(0));
 		std::cout << "Successfully read file." << std::endl;
 	}
 	else if (command.getName() == "close")
@@ -62,8 +62,8 @@ String ConsoleHelpers::initCommand(const Command& command, SVGShapesManager& sha
 			throw String("Invalid arguments.");
 		}
 
-		handleInput.saveFileAs(shapesManager, command.getParameter(0));
-		std::cout << "Successfully saved current shapes into file: " << command.getParameter(0) << std::endl;
+		handleInput.saveFileAs(shapesManager, command.getParameterByIndex(0));
+		std::cout << "Successfully saved current shapes into file: " << command.getParameterByIndex(0) << std::endl;
 	}
 	else if (command.getName() == "help")
 	{
@@ -136,7 +136,7 @@ String ConsoleHelpers::initCommand(const Command& command, SVGShapesManager& sha
 			throw String("This command accepts only one argument.");
 		}
 
-		handleInput.eraseShape(shapesManager, command.getParameter(0));
+		handleInput.eraseShape(shapesManager, command.getParameterByIndex(0));
 	}
 	else if (command.getName() == "translate")
 	{
