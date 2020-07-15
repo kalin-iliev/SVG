@@ -1,8 +1,8 @@
 GCC=g++
-ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ShapeAsText.o obj/ConsoleHelpers.o obj/InputHandler.o obj/StringHelpers.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
+ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ConsoleHelpers.o obj/InputHandler.o obj/StringHelpers.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
 ALL_HEADER_FILES=-Isrc/shared/utils -Isrc/shared -Isrc/shapes -Isrc/containers -Isrc -Isrc/attributes
 
-all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ShapeAsText.o ConsoleHelpers.o InputHandler.o StringHelpers.o Command.o SVGAppWrapper.o SVGShapesManager.o
+all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ConsoleHelpers.o InputHandler.o StringHelpers.o Command.o SVGAppWrapper.o SVGShapesManager.o
 	$(GCC) -o svg src/Main.cpp $(ALL_O_FILES) $(ALL_HEADER_FILES)
 
 directories:
@@ -31,9 +31,6 @@ Line.o: Shape.o src/shapes/Line.cpp src/shapes/Line.h
 
 Rectangle.o: Shape.o src/shapes/Rectangle.cpp src/shapes/Rectangle.h
 	$(GCC) -c -o obj/Rectangle.o src/shapes/Rectangle.cpp -Isrc/attributes -Isrc/containers -Isrc/shared/utils -Isrc/shared
-
-ShapeAsText.o: Shape.o src/shapes/ShapeAsText.cpp src/shapes/ShapeAsText.h
-	$(GCC) -c -o obj/ShapeAsText.o src/shapes/ShapeAsText.cpp -Isrc/attributes -Isrc/containers -Isrc/shared/utils -Isrc/shared
 
 ConsoleHelpers.o: src/shared/utils/ConsoleHelpers.h src/shared/utils/ConsoleHelpers.cpp src/shared/utils/InputHandler.h src/SVGShapesManager.h src/shared/Command.h
 	$(GCC) -c -o obj/ConsoleHelpers.o src/shared/utils/ConsoleHelpers.cpp -Isrc/shared -Isrc/shared/utils -Isrc  -Isrc/shapes -Isrc/attributes -Isrc/containers

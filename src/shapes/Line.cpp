@@ -2,75 +2,81 @@
 #include <iostream>
 #include <cstring>
 
-Shape* Line::clone() {
+Shape* Line::clone()
+{
 	return new Line(*this);
 }
 
-void Line::copy(const Line& other) {
-	attributes = other.attributes;
+void Line::copy(const Line& other)
+{
+	this->attributes = other.attributes;
+	setSVGDefinition();
 }
 
-Attribute Line::getAttribute(const String& attrName) const {
-	int indexAttr = attributes.indexOfCurrentAttribute(attrName);
-	if (indexAttr == -1)
+Attribute Line::getAttribute(const String& attributeName) const
+{
+	int attributeIndex = attributes.indexOfCurrentAttribute(attributeName);
+	if (attributeIndex == -1)
+	{
 		return Attribute();
-	return attributes.getAttribute(indexAttr);
+	}
+
+	return attributes.getAttribute(attributeIndex);
 }
 
-void Line::init(const String& text) {
-	try {
-		attributes = MainAttributes(text, "line");
-		type = "line";
-		setText();
-	}
-	catch (const String& error) {
-		throw error;
-	}
+void Line::init(const String& svgDefinition)
+{
+	this->type = "line";
+	attributes = MainAttributes(svgDefinition, this->type);
+	setSVGDefinition();
 }
 
-Line::Line(const String& text) {
-	try {
-		setCommonAttr(text);
-		init(text);
-	}
-	catch (const String& error) {
-		throw error;
-	}
+Line::Line(const String& svgDefinition)
+{
+	setCommonAttributes(svgDefinition);
+	init(svgDefinition);
 }
 
-Line::Line(const Line& other) : Shape(other) {
+Line::Line(const Line& other) : Shape(other)
+{
 	if (this != &other)
 	{
 		copy(other);
-		type = other.type;
-		setText();
 	}
 }
 
-Line& Line::operator=(const Line& other) {
+Line& Line::operator=(const Line& other)
+{
 	if (this != &other)
 	{
 		Shape::operator=(other);
 		copy(other);
-		setText();
 	}
 	return *this;
 }
 
-void Line::translateCoordinates(long int incX, long int incY) {
-	unsigned x1Attr = attributes.indexOfCurrentAttribute("x1");
-	unsigned y1Attr = attributes.indexOfCurrentAttribute("y1");
-	unsigned x2Attr = attributes.indexOfCurrentAttribute("x2");
-	unsigned y2Attr = attributes.indexOfCurrentAttribute("y2");
-	long int x1 = attributes[x1Attr].getValue().toInt();
-	long int y1 = attributes[y1Attr].getValue().toInt();
-	long int x2 = attributes[x2Attr].getValue().toInt();
-	long int y2 = attributes[y2Attr].getValue().toInt();
-	x1 += incX;
-	x2 += incX;
-	y1 += incY;
-	y2 += incY;
+void Line::translateCoordinates(int x, int y)
+{
+	unsigned x1AttributeIndex = attributes.indexOfCurrentAttribute("x1");
+	unsigned y1AttributeIndex = attributes.indexOfCurrentAttribute("y1");
+	unsigned x2AttributeIndex = attributes.indexOfCurrentAttribute("x2");
+	unsigned y2AttributeIndex = attributes.indexOfCurrentAttribute("y2");
+	if (x1AttributeIndex < 0 || y1AttributeIndex < 0 || x2AttributeIndex < 0 || y2AttributeIndex < 0)
+	{
+		throw String("Invalid line object attributes. Cannot translate.");
+	}
 
+	long int x1 = attributes[x1AttributeIndex].getValue().toInt();
+	long int y1 = attributes[y1AttributeIndex].getValue().toInt();
+	long int x2 = attributes[x2AttributeIndex].getValue().toInt();
+	long int y2 = attributes[y2AttributeIndex].getValue().toInt();
+
+	x1 += x;
+	x2 += x;
+	y1 += y;
+	y2 += y;
+
+	// TODO reuse the util from Circle
 	String bufferX1;
 	String bufferX2;
 	String bufferY1;
@@ -79,28 +85,29 @@ void Line::translateCoordinates(long int incX, long int incY) {
 	bufferY1 = String(std::to_string(y1).c_str());
 	bufferX2 = String(std::to_string(x2).c_str());
 	bufferY2 = String(std::to_string(y2).c_str());
-	attributes.setAttributeValue(x1Attr, bufferX1);
-	attributes.setAttributeValue(y1Attr, bufferY1);
-	attributes.setAttributeValue(x2Attr, bufferX2);
-	attributes.setAttributeValue(y2Attr, bufferY2);
-	setText();
+	attributes.setAttributeValue(x1AttributeIndex, bufferX1);
+	attributes.setAttributeValue(y1AttributeIndex, bufferY1);
+	attributes.setAttributeValue(x2AttributeIndex, bufferX2);
+	attributes.setAttributeValue(y2AttributeIndex, bufferY2);
+	setSVGDefinition();
 }
 
-void Line::setText() {
-	text = ('<' + type + ' ' + attributes.currentAttributesToString() + ' ' + commonAttr.currentAttributesToString() + " />");
+void Line::setSVGDefinition()
+{
+	this->svgDefinition = ('<' + type + ' ' + attributes.currentAttributesToString() + ' ' + commonAttributes.currentAttributesToString() + " />");
 }
 
-void Line::print() const {
-	std::cout << type;
-	int size = attributes.getCurrentAttributes().size();
-	for (int i = 0; i < size; i++)
-		std::cout << ' ' << attributes[i].getValue();
+void Line::print() const
+{
+	std::cout << type << " ";
+	attributes.printCurrentAttributes();
 	std::cout << ' ';
-	commonAttr.printCurrentAttributes();
+	commonAttributes.printCurrentAttributes();
 	std::cout << std::endl;
 }
 
-bool Line::fitsInRect(const Rectangle& other) const {
+bool Line::fitsInRect(const Rectangle& other) const
+{
 	long int currX1 = getAttribute("x1").getValue().toInt();
 	long int currY1 = getAttribute("y1").getValue().toInt();
 	long int currX2 = getAttribute("x2").getValue().toInt();
@@ -113,12 +120,12 @@ bool Line::fitsInRect(const Rectangle& other) const {
 
 	bool firstPointIsInside = (currX1 >= rectX && currX1 <= rectX + width) && (currY1 >= rectY && currY1 <= rectY + height);
 	bool secondPointIsInside = (currX2 >= rectX && currX2 <= rectX + width) && (currY2 >= rectY && currY2 <= rectY + height);
-	if (!(firstPointIsInside && secondPointIsInside))
-		return false;
-	return true;
+
+	return firstPointIsInside && secondPointIsInside;
 }
 
-bool Line::fitsInCircle(const Circle& other) const {
+bool Line::fitsInCircle(const Circle& other) const
+{
 	long int currX1 = getAttribute("x1").getValue().toInt();
 	long int currY1 = getAttribute("y1").getValue().toInt();
 	long int currX2 = getAttribute("x2").getValue().toInt();
@@ -128,9 +135,21 @@ bool Line::fitsInCircle(const Circle& other) const {
 	long int cy = other.getAttribute("cy").getValue().toInt();
 	long int radius = other.getAttribute("r").getValue().toInt();
 
-	bool firstPointIsInside = ( ( (cx - currX1) * (cx - currX1) ) + ( (cy - currY1) * (cy - currY1) ) ) <= radius * radius;
-	bool secondPointIsInside = ( ( (cx - currX2) * (cx - currX2) ) + ( (cy - currY2) * (cy - currY2) ) ) <= radius * radius;
-	if (!(firstPointIsInside && secondPointIsInside))
-		return false;
-	return true;
+
+	int pointOneDistanceSquared = (cx - currX1) * (cx - currX1) + (cy - currY1) * (cy - currY1);
+	int pointTwoDistanceSquared = (cx - currX2) * (cx - currX2) + (cy - currY2) * (cy - currY2);
+	bool firstPointIsInside = pointOneDistanceSquared <= radius * radius;
+	bool secondPointIsInside = pointTwoDistanceSquared <= radius * radius;
+
+	return firstPointIsInside && secondPointIsInside;
+}
+
+Vector<Attribute> Line::getCommonAttributes() const
+{ 
+	return commonAttributes.getCurrentAttributes();
+}
+
+Vector<Attribute> Line::getMainAttributes() const
+{
+	return attributes.getCurrentAttributes();
 }

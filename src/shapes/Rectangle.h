@@ -9,8 +9,8 @@ class Rectangle : public Shape
 	MainAttributes attributes;
 	String type;
 	void copy(const Rectangle& other);
-	void init(const String& text);
-	void setText();
+	void init(const String& svgDefinition);
+	void setSVGDefinition();
 public:
 	Shape* clone();
 	Rectangle(const String&);
@@ -18,15 +18,15 @@ public:
 	Rectangle& operator=(const Rectangle&);
 
 	Attribute getAttribute(const String& attrName) const;
-	Vector<Attribute> getCommonAttributes() const { return commonAttr.getCurrentAttributes(); }
-	Vector<Attribute> getMainAttributes() const { return attributes.getCurrentAttributes(); }
+	Vector<Attribute> getCommonAttributes() const;
+	Vector<Attribute> getMainAttributes() const;
 
 	bool fitsInRect(const Rectangle&) const;
 	bool fitsInCircle(const Circle&) const;
 
-	void translateCoordinates(long int, long int);
-	String getText() const { return text; }
+	void translateCoordinates(int x, int y);
+	String getSVGDefinition() const { return svgDefinition; } // TODO remove - should be in base class
 	void print() const;
-	String getType() const { return type; }
+	String getType() const { return type; } // TODO remove - should be in base class
 };
 

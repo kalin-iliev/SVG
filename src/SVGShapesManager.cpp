@@ -3,7 +3,6 @@
 #include "Circle.h"
 #include "Rectangle.h"
 #include "Line.h"
-#include "ShapeAsText.h"
 #include <iostream>
 #include <cstring>
 #include <cmath>
@@ -210,8 +209,7 @@ Shape* SVGShapesManager::createShapeFromText(const String& text) {
 		newShape = new Rectangle(text);
 	else if (findAttributeNameIndex("line", attributes) > -1)
 		newShape = new Line(text);
-	else
-		newShape = new ShapeAsText(text);
+
 	return newShape;
 }
 
@@ -225,7 +223,7 @@ void SVGShapesManager::saveFile(std::ofstream& svgFile) {
 	svgFile << openSvgTag << '\n';
 	for (int i = 0; i < size; i++)
 	{
-		svgFile << shapes[i]->getText() << '\n';
+		svgFile << shapes[i]->getSVGDefinition() << '\n';
 	}
 	svgFile << closingSvgTag << '\n';
 }

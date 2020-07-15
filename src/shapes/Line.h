@@ -12,23 +12,23 @@ class Line : public Shape
 	MainAttributes attributes;
 	String type;
 	void copy(const Line&);
-	void init(const String& text);
-	void setText();
+	void init(const String& svgDefinition);
+	void setSVGDefinition();
 public:
 	Shape* clone();
-	Line(const String& text);
+	Line(const String& svgDefinition);
 	Line(const Line&);
 	Line& operator=(const Line&);
 
-	Attribute getAttribute(const String& attrName) const;
-	Vector<Attribute> getCommonAttributes() const { return commonAttr.getCurrentAttributes(); }
-	Vector<Attribute> getMainAttributes() const { return attributes.getCurrentAttributes(); }
+	Attribute getAttribute(const String& attributeName) const;
+	Vector<Attribute> getCommonAttributes() const;
+	Vector<Attribute> getMainAttributes() const;
 
 	bool fitsInRect(const Rectangle&) const; 
 	bool fitsInCircle(const Circle&) const;
 
-	void translateCoordinates(long int, long int);
-	String getText() const { return text; }
+	void translateCoordinates(int x, int y);
+	String getSVGDefinition() const { return svgDefinition; }
 	void print() const;
 	String getType() const { return type; }
 };

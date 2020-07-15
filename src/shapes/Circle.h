@@ -7,10 +7,10 @@ class Rectangle;
 class Circle : public Shape
 {
 	MainAttributes attributes;
-	String type;
+	String type;	// TODO change type to enum - should be in base class
 	void copy(const Circle&);
 	void init(const String&);
-	void setText();
+	void setSVGDefinition();
 public:
 	Shape* clone();
 	Circle(const String&);
@@ -18,14 +18,14 @@ public:
 	Circle& operator=(const Circle&);
 
 	Attribute getAttribute(const String& attrName) const;
-	Vector<Attribute> getCommonAttributes() const { return commonAttr.getCurrentAttributes(); }
-	Vector<Attribute> getMainAttributes() const { return attributes.getCurrentAttributes(); }
+	Vector<Attribute> getCommonAttributes() const;
+	Vector<Attribute> getMainAttributes() const;
 
-	bool fitsInRect(const Rectangle&) const; 
+	bool fitsInRect(const Rectangle&) const;
 	bool fitsInCircle(const Circle&) const;
 
-	void translateCoordinates(long int, long int);
-	String getText() const;
+	void translateCoordinates(int x, int y);
+	String getSVGDefinition() const;
 	void print() const;
 	String getType() const;
 };
