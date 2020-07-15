@@ -57,7 +57,7 @@ void SVGShapesManager::appendString(String& dest, const String& buffer, int appe
 	dest += newString;
 }
 
-bool SVGShapesManager::isAttributeLetter(char c) {
+bool SVGShapesManager::isLetter(char c) {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
 }
 
@@ -65,16 +65,16 @@ int SVGShapesManager::attributesCount(const String& text) {
 	int cnt = 0;
 	int length = 0;
 	while (text[length]) {
-		while (text[length] && !isAttributeLetter(text[length])) {  // skip letters to the beginning of a word
+		while (text[length] && !isLetter(text[length])) {  // skip letters to the beginning of a word
 			++length;
 		}
 		if (text[length]) {
 			++cnt;                              // if there is a word, count it
 		}
-		while (text[length] && (isAttributeLetter(text[length]) || text[length] == '-')) {           // skip to the end of the word
+		while (text[length] && (isLetter(text[length]) || text[length] == '-')) {           // skip to the end of the word
 			++length;
 		}
-		while (text[length] && !isAttributeLetter(text[length]))
+		while (text[length] && !isLetter(text[length]))
 		{
 			if (text[length] == '-')
 			{
@@ -113,19 +113,19 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attr
 	int length = 0;
 	for (int i = 0; i < countAttr; i++)
 	{
-		while (text[length] && !isAttributeLetter(text[length])) {  // skip letters to the beginning of a word
+		while (text[length] && !isLetter(text[length])) {  // skip letters to the beginning of a word
 			++length;
 		}
 		if (text[length]) {                            // if there is a word, count it
 			int start = length;
 			int attrSize = 0;
 			int currentSize = 0;
-			while (text[length] && (isAttributeLetter(text[length]) || text[length] == '-')) {         // skip to the end of the word
+			while (text[length] && (isLetter(text[length]) || text[length] == '-')) {         // skip to the end of the word
 				++attrSize;
 				++length;
 			}
 
-			while (text[length] && !isAttributeLetter(text[length]))
+			while (text[length] && !isLetter(text[length]))
 			{
 				if (text[length] == '-')
 				{
@@ -167,7 +167,7 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attr
 			char* attr = new char[attrSize + 1];
 			bool hasAssignmentChar = false;
 			for (int p = start; p < length && currentSize < attrSize; p++) {
-				if ((isAttributeLetter(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
+				if ((isLetter(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
 				{
 					if (hasAssignmentChar) {
 						if (text[p] != '"')
@@ -191,7 +191,7 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attr
 	return countAttr;
 }
 
-int SVGShapesManager::findAttributeName(const String& attrName, const Vector<String>& attributes) {
+int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<String>& attributes) {
 	unsigned size = attributes.size();
 	for (unsigned i = 0; i < size; i++)
 		if (attributes[i] == attrName)
@@ -204,11 +204,11 @@ Shape* SVGShapesManager::createShapeFromText(const String& text) {
 	int countWords = extractAttributes(text, attributes);
 
 	Shape* newShape = nullptr;
-	if (findAttributeName("circle", attributes) > -1)
+	if (findAttributeNameIndex("circle", attributes) > -1)
 		newShape = new Circle(text);
-	else if (findAttributeName("rect", attributes) > -1)
+	else if (findAttributeNameIndex("rect", attributes) > -1)
 		newShape = new Rectangle(text);
-	else if (findAttributeName("line", attributes) > -1)
+	else if (findAttributeNameIndex("line", attributes) > -1)
 		newShape = new Line(text);
 	else
 		newShape = new ShapeAsText(text);

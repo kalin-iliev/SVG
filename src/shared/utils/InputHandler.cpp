@@ -173,7 +173,7 @@ void InputHandler::translate(SVGShapesManager& currentManager, const Vector<Stri
 	if (xTranslateIndex == -1 && yTranslateIndex == -1)
 		throw String("There are no integers to translate coordinates.");
 
-	if (isStringInt(translateParameters[size - 1])) indexShape = size - 1;
+	if (isInt(translateParameters[size - 1])) indexShape = size - 1;
 
 	String xCoord = (xTranslateIndex > -1) ? getRealParamValue(translateParameters[xTranslateIndex]) : "";
 	String yCoord = (yTranslateIndex > -1) ? getRealParamValue(translateParameters[yTranslateIndex]) : "";
@@ -183,13 +183,13 @@ void InputHandler::translate(SVGShapesManager& currentManager, const Vector<Stri
 
 void InputHandler::translateShapes(SVGShapesManager& currentManager, const String& xCoord, const String& yCoord, const String& index) {
 	if (xCoord)
-		if (!isStringInt(xCoord))
+		if (!isInt(xCoord))
 			throw String("Wrong entered value for x translation.");
 	if (yCoord)
-		if (!isStringInt(yCoord))
+		if (!isInt(yCoord))
 			throw String("Wrong entered value for y translation.");
 	if (index)
-		if (!isStringInt(yCoord))
+		if (!isInt(yCoord))
 			throw String("Wrong entered value for index.");
 
 	long int xTranslate = (xCoord) ? xCoord.strToInt() : 0;
@@ -315,7 +315,7 @@ void InputHandler::createShape(SVGShapesManager& currentManager, const Vector<St
 
 void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexParameter) {
 	try {
-		if (!isStringInt(indexParameter))
+		if (!isInt(indexParameter))
 			throw String("The index parameter is invalid.");
 		currentManager.removeShape(indexParameter.strToInt());
 		std::cout << "Successfully removed shape at this index." << std::endl;
@@ -333,7 +333,7 @@ bool InputHandler::isCharInt(char c) {
 	return (c >= '0' && c <= '9');
 }
 
-bool InputHandler::isStringInt(const String& text) {
+bool InputHandler::isInt(const String& text) {
 	int size = text.size();
 	int start = 0;
 	int dashIndex = text.has('-');

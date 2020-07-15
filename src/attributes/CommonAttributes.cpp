@@ -1,6 +1,7 @@
 #include "CommonAttributes.h"
 
-int CommonAttributes::findAttribute(const String& attributeName, const Vector<String>& extractedAttributes) {
+int CommonAttributes::findAttributeIndex(const String& attributeName, const Vector<String>& extractedAttributes)
+{
 	int size = extractedAttributes.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -10,7 +11,8 @@ int CommonAttributes::findAttribute(const String& attributeName, const Vector<St
 	return -1;
 }
 
-int CommonAttributes::findAttributeName(const String& attributeName, const Vector<String>& attributeNames) {
+int CommonAttributes::findAttributeNameIndex(const String& attributeName, const Vector<String>& attributeNames)
+{
 	int size = attributeNames.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -21,154 +23,108 @@ int CommonAttributes::findAttributeName(const String& attributeName, const Vecto
 	return -1;
 }
 
-void CommonAttributes::pushInAllowedAttributes(const AttributeInfo elements[], int size) {
-	for (int i = 0; i < size; i++)
+void CommonAttributes::addAllowedAttributes(const AttributeInfo allowedAttributes[], int allowedAttributesCount)
+{
+	for (int i = 0; i < allowedAttributesCount; i++)
 	{
-		if(elements[i].intValid())
-			allowedIntAttributes.push_back(elements[i].getName());
-		allowedAttributes.push_back(elements[i].getName());
+		if(allowedAttributes[i].intValid())
+			this->allowedIntAttributes.push_back(allowedAttributes[i].getName());
+		this->allowedAttributes.push_back(allowedAttributes[i].getName());
 	}
 }
 
-bool CommonAttributes::isAttributeLetter(char c) {
+bool CommonAttributes::isLetter(char c)
+{
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
 }
 
-void CommonAttributes::setCurrentAttributes(const String& text) {
-	try {
-		Vector<String> attributes;
-		extractAttributes(text, attributes);
-		int allowedAttrSize = allowedAttributes.size();
+void CommonAttributes::setCurrentAttributes(const String& text)
+{
+	Vector<String> attributes;
+	extractAttributes(text, attributes);
 
-		for (int i = 0; i < allowedAttrSize; i++)
-		{
-			int indexCommonAttrInArray = findAttribute(allowedAttributes[i], attributes);
-			if (indexCommonAttrInArray > -1)
-			{
-				bool valueIsInt = false;
-				if (findAttributeName(allowedAttributes[i], allowedIntAttributes) > -1)
-					valueIsInt = true;
-				String attr = attributes[indexCommonAttrInArray];
-				Attribute newAttr(attr, valueIsInt);
-				if (!newAttr)
-					throw String("One of the common attributes is invalid.");
-				currentAttributes.push_back(newAttr);
-			}
-		}
-	}
-	catch (const String& error) {
-		throw error;
-	}
-	
-}
-
-int CommonAttributes::attributesCount(const String& text) {
-	int cnt = 0;
-	int length = 0;
-	while (text[length]) {
-		while (text[length] && !isAttributeLetter(text[length])) {  // skip letters to the beginning of a word
-			++length;
-		}
-		if (text[length]) {
-			++cnt;                              // if there is a word, count it
-		}
-		while (text[length] && (isAttributeLetter(text[length]) || text[length] == '-')) {           // skip to the end of the word
-			++length;
-		}
-		while (text[length] && !isAttributeLetter(text[length]))
-		{
-			if (text[length] == '-')
-			{
-				++length;
-				while (text[length] && text[length] != '=')
-				{
-					++length;
-				}
-				++length;
-			}
-			if (text[length] == '=')
-			{
-				++length;
-				while (text[length] && text[length] != '"')
-					++length;
-			}
-			else if (text[length] == '"')
-			{
-				++length;
-				while (text[length] && text[length] != '"')
-				{
-					++length;
-				}
-				++length;
-			}
-			else {
-				++length;
-			}
-		}
-	}
-	return cnt;
-}
-
-int CommonAttributes::extractAttributes(const String& text, Vector<String>& attributes) {
-	int countAttr = attributesCount(text);
-	int length = 0;
-	for (int i = 0; i < countAttr; i++)
+	for (int i = 0; i < allowedAttributes.size(); i++)
 	{
-		while (text[length] && !isAttributeLetter(text[length])) {  // skip letters to the beginning of a word
-			++length;
+		int commonAttributeIndex = findAttributeIndex(allowedAttributes[i], attributes);
+		if (commonAttributeIndex > -1)
+		{
+			bool valueIsInt = false;
+			if (findAttributeNameIndex(allowedAttributes[i], allowedIntAttributes) > -1)
+				valueIsInt = true;
+
+			Attribute newAttr(attributes[commonAttributeIndex], valueIsInt);
+			if (!newAttr)
+				throw String("One of the common attributes is invalid.");
+			currentAttributes.push_back(newAttr);
 		}
-		if (text[length]) {                            // if there is a word, count it
-			int start = length;
+	}	
+}
+
+// TODO refactor - it is too long and complicated!
+int CommonAttributes::extractAttributes(const String& text, Vector<String>& attributes)
+{
+	int count = 0;
+	int index = 0;
+	while (text[index])
+	{
+		while (text[index] && !isLetter(text[index]))
+		{  // skip letters to the beginning of a word
+			++index;
+		}
+		if (text[index])
+		{ // if there is a word, count it
+			int start = index;
 			int attrSize = 0;
 			int currentSize = 0;
-			while (text[length] && (isAttributeLetter(text[length]) || text[length] == '-')) {         // skip to the end of the word
+			while (text[index] && (isLetter(text[index]) || text[index] == '-'))
+			{  // skip to the end of the word
 				++attrSize;
-				++length;
+				++index;
 			}
 
-			while (text[length] && !isAttributeLetter(text[length]))
+			while (text[index] && !isLetter(text[index]))
 			{
-				if (text[length] == '-')
+				if (text[index] == '-')
 				{
 					++attrSize;
-					++length;
-					while (text[length] && text[length] != '=')
+					++index;
+					while (text[index] && text[index] != '=')
 					{
 						++attrSize;
-						++length;
+						++index;
 					}
-					++length;
+					++index;
 				}
-				if (text[length] == '=')
+				if (text[index] == '=')
 				{
 					++attrSize;
-					++length;
-					while (text[length] && text[length] != '"')
-						++length;
+					++index;
+					while (text[index] && text[index] != '"')
+						++index;
 				}
-				else if (text[length] == '"')
+				else if (text[index] == '"')
 				{
 					++attrSize;
-					++length;
-					while (text[length] && text[length] != '"')
+					++index;
+					while (text[index] && text[index] != '"')
 					{
 
-						if (text[length] != ' ' && text[length] != '\n' && text[length] != '\t')
+						if (text[index] != ' ' && text[index] != '\n' && text[index] != '\t')
 							++attrSize;
-						++length;
+						++index;
 					}
 					++attrSize;
-					++length;
+					++index;
 				}
 				else {
-					++length;
+					++index;
 				}
 			}
 
 			char* attr = new char[attrSize + 1];
 			bool hasAssignmentChar = false;
-			for (int p = start; p < length && currentSize < attrSize; p++) {
-				if ((isAttributeLetter(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
+			for (int p = start; p < index && currentSize < attrSize; p++) {
+				if ((isLetter(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
 				{
 					if (hasAssignmentChar) {
 						if (text[p] != '"')
@@ -189,20 +145,17 @@ int CommonAttributes::extractAttributes(const String& text, Vector<String>& attr
 		}
 	}
 
-	return countAttr;
+	return count;
 }
 
-CommonAttributes::CommonAttributes(const String& text) {
-	try {
-		pushInAllowedAttributes(commonAttributes, commonAttrSize);
-		setCurrentAttributes(text);
-	}
-	catch (const String& error) {
-		throw error;
-	}
+CommonAttributes::CommonAttributes(const String& text)
+{
+	addAllowedAttributes(commonAttributes, commonAttrSize);
+	setCurrentAttributes(text);
 }
 
-CommonAttributes::CommonAttributes(const CommonAttributes& other) {
+CommonAttributes::CommonAttributes(const CommonAttributes& other)
+{
 	if (this != &other)
 	{
 		allowedAttributes = other.allowedAttributes;
@@ -211,107 +164,151 @@ CommonAttributes::CommonAttributes(const CommonAttributes& other) {
 	}
 }
 
-CommonAttributes& CommonAttributes::operator=(const CommonAttributes& other) {
+CommonAttributes& CommonAttributes::operator=(const CommonAttributes& other)
+{
 	if (this != &other) {
-		allowedAttributes = other.allowedAttributes;
-		allowedIntAttributes = other.allowedIntAttributes;
-		currentAttributes = other.currentAttributes;
+		this->allowedAttributes = other.allowedAttributes;
+		this->allowedIntAttributes = other.allowedIntAttributes;
+		this->currentAttributes = other.currentAttributes;
 	}
 	return *this;
 }
 
-void CommonAttributes::printAllowedAttributes() const {
-	int size = allowedAttributes.size();
-	for (int i = 0; i < size; i++)
+void CommonAttributes::printAllowedAttributes() const
+{
+	for (int i = 0; i < allowedAttributes.size(); i++)
 	{
 		std::cout << allowedAttributes[i];
-		if (i != size - 1)
+		if (i != allowedAttributes.size() - 1)
 			std::cout << ", ";
-	};
+	}
 }
 
-Vector<String> CommonAttributes::getAllowedAttributes() const { return allowedAttributes; }
+Vector<String> CommonAttributes::getAllowedAttributes() const
+{
+	return allowedAttributes;
+}
 
-void CommonAttributes::printAllowedIntAttributes() const {
-	int size = allowedAttributes.size();
-	for (int i = 0; i < size; i++)
+void CommonAttributes::printAllowedIntAttributes() const
+{
+	for (int i = 0; i < allowedAttributes.size(); i++)
 	{
 		std::cout << allowedIntAttributes[i];
-		if (i != size - 1)
+		if (i != allowedAttributes.size() - 1)
 			std::cout << ", ";
-	};
+	}
 }
 
-Vector<String> CommonAttributes::getAllowedIntAttributes() const { return allowedIntAttributes; }
+Vector<String> CommonAttributes::getAllowedIntAttributes() const
+{
+	return allowedIntAttributes;
+}
 
-void CommonAttributes::printCurrentAttributes() const {
-	int size = currentAttributes.size();
-	for (int i = 0; i < size; i++)
+void CommonAttributes::printCurrentAttributes() const
+{
+	for (int i = 0; i < currentAttributes.size(); i++)
 	{
 		std::cout << currentAttributes[i].getValue();
-		if (i != size - 1)
+		if (i != currentAttributes.size() - 1)
 			std::cout << ' ';
-	};
+	}
 }
 
-Vector<Attribute> CommonAttributes::getCurrentAttributes() const { return currentAttributes; }
+Vector<Attribute> CommonAttributes::getCurrentAttributes() const
+{
+	return currentAttributes;
+}
 
-int CommonAttributes::findAllowedAttribute(const String& attr) const {
-	int size = allowedAttributes.size();
-	for (int i = 0; i < size; i++)
+int CommonAttributes::indexOfAllowedAttribute(const String& attr) const
+{
+	for (int i = 0; i < allowedAttributes.size(); i++)
+	{
 		if (allowedAttributes[i] == attr)
+		{
 			return i;
+		}
+	}
 	return -1;
 }
 
-int CommonAttributes::findAllowedIntAttribute(const String& attr) const {
-	int size = allowedIntAttributes.size();
-	for (int i = 0; i < size; i++)
+int CommonAttributes::indexOfAllowedIntAttribute(const String& attr) const
+{
+	for (int i = 0; i < allowedIntAttributes.size(); i++)
+	{
 		if (allowedIntAttributes[i] == attr)
+		{
 			return i;
+		}
+	}
 	return -1;
 }
 
-int CommonAttributes::findCurrentAttribute(const String& attr) const {
-	int size = currentAttributes.size();
-	for (int i = 0; i < size; i++)
+int CommonAttributes::indexOfCurrentAttribute(const String& attr) const
+{
+	for (int i = 0; i < currentAttributes.size(); i++)
+	{
 		if (currentAttributes[i].getName() == attr)
+		{
 			return i;
+		}
+	}
 	return -1;
 }
 
-Attribute CommonAttributes::getAttribute(unsigned index) const {
+Attribute CommonAttributes::getAttribute(unsigned index) const
+{
 	if (index >= currentAttributes.size())
+	{
 		throw String("The index is out of the range of the attributes.");
+	}
+
 	return currentAttributes[index];
 }
 
-Attribute CommonAttributes::operator[](unsigned index) const {
+Attribute CommonAttributes::operator[](unsigned index) const
+{
+	return getAttribute(index);
+}
+
+Attribute& CommonAttributes::operator[](unsigned index)
+{
 	if (index >= currentAttributes.size())
+	{
 		throw String("The index is out of the range of the attributes.");
+	}
 	return currentAttributes[index];
 }
 
-void CommonAttributes::setAttrValue(const String& currentAttr, const String& newValue) {
-	int currentAttributeIndex = findCurrentAttribute(currentAttr);
+void CommonAttributes::setAttributeValue(const String& currentAttr, const String& newValue)
+{
+	int currentAttributeIndex = indexOfCurrentAttribute(currentAttr);
 	if (currentAttributeIndex > -1)
-		currentAttributes[findCurrentAttribute(currentAttr)].setValue(newValue);
+	{
+		currentAttributes[indexOfCurrentAttribute(currentAttr)].setValue(newValue);
+	}
 	else
+	{
+		// TODO throw exception
 		std::cout << "Couldn't find the attribute.";
+	}
 }
 
-void CommonAttributes::setAttrValue(unsigned currentAttrIndex, const String& newValue) {
-	if (currentAttrIndex >= 0 && currentAttrIndex < currentAttributes.size())
+void CommonAttributes::setAttributeValue(unsigned currentAttrIndex, const String& newValue)
+{
+	if (currentAttrIndex < currentAttributes.size())
+	{
 		currentAttributes[currentAttrIndex].setValue(newValue);
+	}
+	// TODO else throw exception
 }
 
-String CommonAttributes::getText() const {
-	int size = currentAttributes.size();
+String CommonAttributes::currentAttributesToString() const
+{
 	String result;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < currentAttributes.size(); i++)
 	{
 		result += currentAttributes[i].toString();
-		if (i != size - 1)
+		if (i != currentAttributes.size() - 1)
 			result += ' ';
 	}
 	return result;

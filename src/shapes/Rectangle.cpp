@@ -7,7 +7,7 @@ Shape* Rectangle::clone() {
 }
 
 Attribute Rectangle::getAttribute(const String& attrName) const {
-	int indexAttr = attributes.findCurrentAttribute(attrName);
+	int indexAttr = attributes.indexOfCurrentAttribute(attrName);
 	if (indexAttr == -1)
 		return Attribute();
 	return attributes.getAttribute(indexAttr);
@@ -62,8 +62,8 @@ void Rectangle::copy(const Rectangle& other) {
 }
 
 void Rectangle::translateCoordinates(long int incX, long int incY) {
-	unsigned xStr = attributes.findCurrentAttribute("x");
-	unsigned yStr = attributes.findCurrentAttribute("y");
+	unsigned xStr = attributes.indexOfCurrentAttribute("x");
+	unsigned yStr = attributes.indexOfCurrentAttribute("y");
 	long int x = attributes[xStr].getValue().strToInt();
 	long int y = attributes[yStr].getValue().strToInt();
 	x += incX;
@@ -72,13 +72,13 @@ void Rectangle::translateCoordinates(long int incX, long int incY) {
 	String newY;
 	newX = String(std::to_string(x).c_str());
 	newY = String(std::to_string(y).c_str());
-	attributes.setAttrValue(xStr, newX);
-	attributes.setAttrValue(yStr, newY);
+	attributes.setAttributeValue(xStr, newX);
+	attributes.setAttributeValue(yStr, newY);
 	setText();
 }
 
 void Rectangle::setText() {
-	text = ('<' + type + ' ' + attributes.getText() + ' ' + commonAttr.getText() + " />");
+	text = ('<' + type + ' ' + attributes.currentAttributesToString() + ' ' + commonAttr.currentAttributesToString() + " />");
 }
 
 void Rectangle::print() const {

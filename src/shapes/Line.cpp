@@ -11,7 +11,7 @@ void Line::copy(const Line& other) {
 }
 
 Attribute Line::getAttribute(const String& attrName) const {
-	int indexAttr = attributes.findCurrentAttribute(attrName);
+	int indexAttr = attributes.indexOfCurrentAttribute(attrName);
 	if (indexAttr == -1)
 		return Attribute();
 	return attributes.getAttribute(indexAttr);
@@ -58,10 +58,10 @@ Line& Line::operator=(const Line& other) {
 }
 
 void Line::translateCoordinates(long int incX, long int incY) {
-	unsigned x1Attr = attributes.findCurrentAttribute("x1");
-	unsigned y1Attr = attributes.findCurrentAttribute("y1");
-	unsigned x2Attr = attributes.findCurrentAttribute("x2");
-	unsigned y2Attr = attributes.findCurrentAttribute("y2");
+	unsigned x1Attr = attributes.indexOfCurrentAttribute("x1");
+	unsigned y1Attr = attributes.indexOfCurrentAttribute("y1");
+	unsigned x2Attr = attributes.indexOfCurrentAttribute("x2");
+	unsigned y2Attr = attributes.indexOfCurrentAttribute("y2");
 	long int x1 = attributes[x1Attr].getValue().strToInt();
 	long int y1 = attributes[y1Attr].getValue().strToInt();
 	long int x2 = attributes[x2Attr].getValue().strToInt();
@@ -79,15 +79,15 @@ void Line::translateCoordinates(long int incX, long int incY) {
 	bufferY1 = String(std::to_string(y1).c_str());
 	bufferX2 = String(std::to_string(x2).c_str());
 	bufferY2 = String(std::to_string(y2).c_str());
-	attributes.setAttrValue(x1Attr, bufferX1);
-	attributes.setAttrValue(y1Attr, bufferY1);
-	attributes.setAttrValue(x2Attr, bufferX2);
-	attributes.setAttrValue(y2Attr, bufferY2);
+	attributes.setAttributeValue(x1Attr, bufferX1);
+	attributes.setAttributeValue(y1Attr, bufferY1);
+	attributes.setAttributeValue(x2Attr, bufferX2);
+	attributes.setAttributeValue(y2Attr, bufferY2);
 	setText();
 }
 
 void Line::setText() {
-	text = ('<' + type + ' ' + attributes.getText() + ' ' + commonAttr.getText() + " />");
+	text = ('<' + type + ' ' + attributes.currentAttributesToString() + ' ' + commonAttr.currentAttributesToString() + " />");
 }
 
 void Line::print() const {

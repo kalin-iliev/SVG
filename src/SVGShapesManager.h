@@ -17,10 +17,10 @@ private:
 	void clean();
 	void appendString(String& dest, const String& buffer, int appendSize);
 	bool resizeShapes(unsigned newCapacity);
-	bool isAttributeLetter(char c);
+	bool isLetter(char c);
 	int attributesCount(const String&);
 	int extractAttributes(const String& text, Vector<String>& attributes);
-	int findAttributeName(const String& attrName, const Vector<String>& attributes);
+	int findAttributeNameIndex(const String& attrName, const Vector<String>& attributes);
 	bool shiftShapes(unsigned index);
 	bool validateContent(std::ifstream& svgFile); 
 	bool readFile(std::ifstream& svgFile);

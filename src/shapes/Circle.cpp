@@ -8,7 +8,7 @@ Shape* Circle::clone() {
 }
 
 Attribute Circle::getAttribute(const String& attrName) const {
-	int indexAttr = attributes.findCurrentAttribute(attrName);
+	int indexAttr = attributes.indexOfCurrentAttribute(attrName);
 	if (indexAttr == -1)
 		return Attribute();
 	return attributes.getAttribute(indexAttr);
@@ -66,8 +66,8 @@ Circle& Circle::operator=(const Circle& other) {
 }
 
 void Circle::translateCoordinates(long int incX, long int incY) {
-	unsigned cxStr = attributes.findCurrentAttribute("cx");
-	unsigned cyStr = attributes.findCurrentAttribute("cy");
+	unsigned cxStr = attributes.indexOfCurrentAttribute("cx");
+	unsigned cyStr = attributes.indexOfCurrentAttribute("cy");
 	long int cx = attributes[cxStr].getValue().strToInt();
 	long int cy = attributes[cyStr].getValue().strToInt();
 	cx += incX;
@@ -76,8 +76,8 @@ void Circle::translateCoordinates(long int incX, long int incY) {
 	String newCy;
 	newCx = String(std::to_string(cx).c_str());
 	newCy = String(std::to_string(cy).c_str());
-	attributes.setAttrValue(cxStr, String(newCx));
-	attributes.setAttrValue(cyStr, String(newCy));
+	attributes.setAttributeValue(cxStr, String(newCx));
+	attributes.setAttributeValue(cyStr, String(newCy));
 	setText();
 }
 
@@ -132,5 +132,5 @@ bool Circle::fitsInRect(const Rectangle& other)  const {
 }
 
 void Circle::setText() {
-	text = ('<' + getType() + ' ' + attributes.getText() + ' ' + commonAttr.getText() + " />");
+	text = ('<' + getType() + ' ' + attributes.currentAttributesToString() + ' ' + commonAttr.currentAttributesToString() + " />");
 }

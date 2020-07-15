@@ -26,7 +26,7 @@ private:
 	bool isPathValid(const String& path, const String& extension);
 	String getFileName(const String& path);
 	bool isFilenameValid(const String& filename, const String& extension = "svg");
-	bool isStringInt(const String& text);
+	bool isInt(const String& text);
 	bool isCharInt(char c);
 	String getRealParamValue(const String& parameter);
 	int findParameter(const String& paramName, const Vector<String>& parameters);

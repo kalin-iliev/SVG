@@ -10,15 +10,15 @@ protected:
 	Vector<String> allowedAttributes;
 	Vector<String> allowedIntAttributes;
 	Vector<Attribute> currentAttributes;
-protected:
-	bool isAttributeLetter(char c);
+
+	bool isLetter(char c); // TODO extract to utils
 	virtual void setCurrentAttributes(const String& text);
-	int attributesCount(const String& text);
 	int extractAttributes(const String& text, Vector<String>& attributes);
-	int findAttribute(const String& attrName, const Vector<String>& extractedAttributes);
-	int findAttributeName(const String& attrName, const Vector<String>& attributeNames);
-	void pushInAllowedAttributes(const AttributeInfo elements[], int size);
-public:
+	int findAttributeIndex(const String& attrName, const Vector<String>& extractedAttributes); // TODO extract to utils & change extractedAttributes to array of attributes?
+	int findAttributeNameIndex(const String& attrName, const Vector<String>& attributeNames); // TODO extract to utils
+	void addAllowedAttributes(const AttributeInfo allowedAttributes[], int allowedAttributesCount);
+
+public:	// TODO move public before protected
 	CommonAttributes() {}
 	CommonAttributes(const String& text);
 	CommonAttributes(const CommonAttributes& other);
@@ -33,13 +33,14 @@ public:
 	void printCurrentAttributes() const;
 	Vector<Attribute> getCurrentAttributes() const;
 
-	int findAllowedAttribute(const String& attr) const;
-	int findAllowedIntAttribute(const String& attr) const;
-	int findCurrentAttribute(const String& attr) const;
+	int indexOfAllowedAttribute(const String& attr) const;
+	int indexOfAllowedIntAttribute(const String& attr) const;
+	int indexOfCurrentAttribute(const String& attr) const;
 	Attribute getAttribute(unsigned index) const;
 	Attribute operator[](unsigned index) const;
-	void setAttrValue(const String& currentAttr, const String& newValue);
-	void setAttrValue(unsigned currentAttrIndex, const String& newValue);
-	String getText() const;
+	Attribute& operator[](unsigned index);
+	void setAttributeValue(const String& currentAttr, const String& newValue);
+	void setAttributeValue(unsigned currentAttrIndex, const String& newValue);
+	String currentAttributesToString() const;
 };
 

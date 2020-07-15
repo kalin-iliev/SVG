@@ -1,10 +1,10 @@
 #include "Attribute.h"
 
-bool Attribute::isLetterInt(char c) {
+bool Attribute::isInt(char c) {
 	return (c >= '0' && c <= '9');
 }
 
-bool Attribute::isStringInt(const String& currentStr) {
+bool Attribute::isInt(const String& currentStr) {
 	int size = currentStr.size();
 	int start = 0;
 	int dashIndex = currentStr.has('-');
@@ -13,14 +13,14 @@ bool Attribute::isStringInt(const String& currentStr) {
 	if (dashIndex > -1) start++;
 	for (int i = start; i < size; i++)
 	{
-		if (!isLetterInt(currentStr[i]))
+		if (!isInt(currentStr[i]))
 			return false;
 	}
 
 	return true;
 }
 
-bool Attribute::isAttributeLetter(char c) {
+bool Attribute::isLetter(char c) {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
 }
 
@@ -33,7 +33,7 @@ String Attribute::getAttrValue(const String& attribute) {
 	if (attribute.countSymbol('"') != 2)
 		return attrValue;
 	while (attribute[length]) {
-		while (attribute[length] && (isAttributeLetter(attribute[length]) || attribute[length] == '-'))
+		while (attribute[length] && (isLetter(attribute[length]) || attribute[length] == '-'))
 			++length;
 		if (attribute[length])
 		{
@@ -84,7 +84,7 @@ String Attribute::getAttrName(const String& attribute) {
 		return attrName;
 
 	while (attribute[length]) {
-		while (attribute[length] && (isAttributeLetter(attribute[length]) || attribute[length] == '-') && attribute[length] != '=')
+		while (attribute[length] && (isLetter(attribute[length]) || attribute[length] == '-') && attribute[length] != '=')
 		{
 			++lenValue;
 			++length;
@@ -103,7 +103,7 @@ String Attribute::getAttrName(const String& attribute) {
 		int currentIndex = 0;
 		for (int i = 0; i < length; i++)
 		{
-			if (isAttributeLetter(attribute[i]) || attribute[i] == '-')
+			if (isLetter(attribute[i]) || attribute[i] == '-')
 			{
 				if (currentIndex < lenValue)
 					attrName[currentIndex++] = attribute[i];
@@ -121,14 +121,14 @@ String Attribute::getAttrName(const String& attribute) {
 Attribute::Attribute() {
 	name = value = "";
 	isValid = false;
-	isInt = false;
+	isValueInt = false;
 }
 
 Attribute::Attribute(const String& attrName, const String& attrValue, bool valueIsInt) {
-	if (valueIsInt && !isStringInt(attrValue))
+	if (valueIsInt && !isInt(attrValue))
 	{
 		name = value = String();
-		isInt = isValid = false;
+		isValueInt = isValid = false;
 	}
 	else {
 		name = attrName;
@@ -136,21 +136,22 @@ Attribute::Attribute(const String& attrName, const String& attrValue, bool value
 		if (!name.size() || !value.size())
 		{
 			name = value = String();
-			isInt = isValid = false;
+			isValueInt = isValid = false;
 		}
 		else {
 			isValid = true;
-			isInt = valueIsInt;
+			isValueInt = valueIsInt;
 		}
 	}
 }
 
-Attribute::Attribute(const String& attribute, bool valueIsInt) {
+Attribute::Attribute(const String& attribute, bool valueIsInt)
+{
 	if (!attribute.size())
 	{
 		name = value = "";
 		isValid = true;
-		isInt = false;
+		isValueInt = false;
 	}
 	else {
 		name = String(getAttrName(attribute));
@@ -159,11 +160,11 @@ Attribute::Attribute(const String& attribute, bool valueIsInt) {
 		{
 			name = value = String();
 			isValid = false;
-			isInt = false;
+			isValueInt = false;
 		}
 		else
 		{
-			if (valueIsInt && !isStringInt(value))
+			if (valueIsInt && !isInt(value))
 			{
 				name = value = String();
 				isValid = false;
@@ -171,7 +172,7 @@ Attribute::Attribute(const String& attribute, bool valueIsInt) {
 			else
 			{
 				isValid = true;
-				isInt = true;
+				isValueInt = true;
 			}
 		}
 	}
@@ -203,7 +204,7 @@ Attribute& Attribute::operator=(const String& attrValue) {
 }
 
 void Attribute::setValue(const String& newValue) {
-	if (isInt && !isStringInt(newValue))
+	if (isValueInt && !isInt(newValue))
 		return;
 	value = newValue;
 }
@@ -220,4 +221,26 @@ std::istream& operator >> (std::istream& in, Attribute& currentAttr) {
 	String attr = (currentName + '=' + '"' + currentValue + '"');
 	currentAttr = attr;
 	return in;
+}
+
+String Attribute::toString() const
+{
+	if (name.size() > 0 && value.size() > 0)
+	{
+		return getName() + "=\"" + getValue() + "\"";
+	}
+	else
+	{
+		return "";
+	}
+}
+
+bool Attribute::operator==(const Attribute& other) const
+{
+	return this->name == other.name && this->value == other.value;
+}
+
+bool Attribute::operator!=(const Attribute& other) const 
+{
+	return !(*this == other);
 }
