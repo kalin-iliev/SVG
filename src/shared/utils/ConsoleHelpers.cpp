@@ -25,11 +25,6 @@ String ConsoleHelpers::initCommand(const Command& command, SVGShapesManager& sha
 	}
 	else if (command.getName() == "close")
 	{
-		if (!handleInput.isFileOpen())
-		{
-			throw String("Currently there is no file open.");
-		}
-
 		if (command.size() > 0)
 		{
 			throw String("This command doesn't need arguments");
@@ -109,28 +104,14 @@ String ConsoleHelpers::initCommand(const Command& command, SVGShapesManager& sha
 	}
 	else if (command.getName() == "create")
 	{
-		if (!handleInput.isFileOpen())
-		{
-			throw String("Currently there is no open file.");
-		}
-
 		handleInput.createShape(shapesManager, command.getParameters());
 	}
 	else if (command.getName() == "within")
 	{
-		if (!handleInput.isFileOpen())
-		{
-			throw String("Currently there is no open file.");
-		}
-
 		handleInput.isWithin(shapesManager, command.getParameters());
 	}
 	else if (command.getName() == "erase")
 	{
-		if (!handleInput.isFileOpen())
-		{
-			throw String("Currently there is no open file.");
-		}
 		if (command.size() != 1)
 		{
 			throw String("This command accepts only one argument.");

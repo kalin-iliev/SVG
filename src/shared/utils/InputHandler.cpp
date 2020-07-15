@@ -305,6 +305,11 @@ void InputHandler::translateShapes(SVGShapesManager& currentManager, const Strin
 
 void InputHandler::isWithin(const SVGShapesManager& currentManager, const Vector<String>& shapeAttributes)
 {
+	if (!currentOpenFile)
+	{
+		throw String("Currently there is no open file.");
+	}
+
 	int size = shapeAttributes.size();
 	if (!size)
 	{
@@ -391,6 +396,11 @@ String InputHandler::createShapeText(const String& shapeType, const AttributeInf
 
 void InputHandler::createShape(SVGShapesManager& currentManager, const Vector<String>& shapeAttributes)
 {
+	if (!currentOpenFile)
+	{
+		throw String("Currently there is no open file.");
+	}
+
 	Shape* newShape = nullptr;
 	int size = shapeAttributes.size();
 	if (!size)
@@ -436,6 +446,10 @@ void InputHandler::createShape(SVGShapesManager& currentManager, const Vector<St
 
 void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexParameter)
 {
+	if (!currentOpenFile)
+	{
+		throw String("Currently there is no open file.");
+	}
 	if (!isInt(indexParameter))
 	{
 		throw String("The index parameter is invalid.");
@@ -447,6 +461,11 @@ void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexPara
 
 void InputHandler::closeFile() 
 {
+	if (!currentOpenFile)
+	{
+		throw String("Currently there is no file open.");
+	}
+
 	currentOpenFile = String();
 }
 
