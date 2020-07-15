@@ -5,8 +5,9 @@ const int DEFAULT_VECTOR_CAPACITY = 20;
 template<class T>
 class Vector
 {
+	// TODO put public first
 private:
-	T* vContainer;
+	T* data;
 	unsigned vSize;
 	unsigned vCapacity;
 public:
@@ -16,14 +17,13 @@ public:
 	~Vector();
 
 	class Iterator;
+
 	Iterator begin();
 	Iterator end();
 	const Iterator begin() const;
 	const Iterator end() const;
 
-
 	unsigned const size() const;
-	unsigned const capacity() const;
 
 	void push_back(T obj);
 	void pop();
@@ -40,180 +40,235 @@ private:
 };
 
 template <class T>
-class Vector<T>::Iterator {
+class Vector<T>::Iterator
+{
+	// TODO put public first
 private:
-	T* currentContainer;
+	T* currentData;
 public:
-	Iterator(T* container) : currentContainer(container) {}
+	Iterator(T* data) : currentData(data) {}
 
-	Iterator& operator++() {
-		currentContainer++;
+	Iterator& operator++()
+	{
+		currentData++;
 		return *this;
 	}
 
-	Iterator& operator--() {
-		currentContainer--;
+	Iterator& operator--()
+	{
+		currentData--;
 		return *this;
 	}
 
-	T& operator*() {
-		return *currentContainer;
+	T& operator*()
+	{
+		return *currentData;
 	}
 
-	T operator*() const {
-		return *currentContainer;
+	T operator*() const
+	{
+		return *currentData;
 	}
 
-	T& operator->() {
-		return currentContainer;
+	T& operator->()
+	{
+		return currentData;
 	}
 
-	T operator->() const {
-		return currentContainer;
+	T operator->() const
+	{
+		return currentData;
 	}
 
-	bool operator==(const Iterator& other) const {
-		return currentContainer == other.currentContainer;
+	bool operator==(const Iterator& other) const
+	{
+		return currentData == other.currentData;
 	}
 
-	bool operator!=(const Iterator& other) const {
+	bool operator!=(const Iterator& other) const
+	{
 		return !(*this == other);
 	}
 };
 
 template <class T>
-void Vector<T>::clear() {
-	delete[] vContainer;
+void Vector<T>::clear()
+{
+	delete[] this->data;
+	this->vCapacity = 0;
+	this->vSize = 0;
 }
 
 template <class T>
-Vector<T>::Vector(unsigned capacity) : vSize(0), vCapacity(capacity) {
-	vContainer = new T[capacity];
+Vector<T>::Vector(unsigned vCapacity) : vSize(0), vCapacity(vCapacity)
+{
+	data = new T[vCapacity];
 }
 
 template <class T>
-Vector<T>::Vector(const Vector<T>& other) : vSize(other.vSize), vCapacity(other.vCapacity) {
-	vContainer = new T[other.vCapacity];
+Vector<T>::Vector(const Vector<T>& other) : vSize(other.vSize), vCapacity(other.vCapacity)
+{
+	data = new T[other.vCapacity];
 	for (unsigned i = 0; i < other.vSize; i++)
-		vContainer[i] = other.vContainer[i];
+	{
+		data[i] = other.data[i];
+	}
 }
 
 template <class T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
-	if (this == &other) return *this;
-
-	if (other.vSize <= vCapacity)
+Vector<T>& Vector<T>::operator=(const Vector<T>& other)
+{
+	if (this == &other)
 	{
-		for (unsigned i = 0; i < other.vSize; i++)
-			vContainer[i] = other.vContainer[i];
-		vSize = other.vSize;
 		return *this;
 	}
 
-	vSize = other.vSize;
-	vCapacity = other.vCapacity;
-	delete[] vContainer;
-	vContainer = new T[vCapacity];
-	for (unsigned i = 0; i < other.vSize; i++)
-		vContainer[i] = other.vContainer[i];
+	if (other.vSize > this->vCapacity)
+	{
+		this->vSize = other.vSize;
+		this->vCapacity = other.vCapacity;
+		delete[] data;
+		data = new T[vCapacity];
+	}
 
+	for (unsigned i = 0; i < other.vSize; i++)
+	{
+		data[i] = other.data[i];
+	}
+	vSize = other.vSize;
 	return *this;
 }
 
 template <class T>
-inline Vector<T>::~Vector() {
+inline Vector<T>::~Vector()
+{
 	clear();
 }
 
 template <class T>
-inline typename Vector<T>::Iterator Vector<T>::begin() {
-	return Vector<T>::Iterator(&vContainer[0]);
+inline typename Vector<T>::Iterator Vector<T>::begin()
+{
+	return Vector<T>::Iterator(&data[0]);
 }
 
 template <class T>
-inline const typename Vector<T>::Iterator Vector <T>::begin() const {
-	return Vector<T>::Iterator(&vContainer[0]);
+inline const typename Vector<T>::Iterator Vector <T>::begin() const
+{
+	return Vector<T>::Iterator(&data[0]);
 }
 
 template <class T>
-inline typename Vector<T>::Iterator Vector <T>::end() {
-	return Vector<T>::Iterator(&vContainer[vSize]);
+inline typename Vector<T>::Iterator Vector <T>::end()
+{
+	return Vector<T>::Iterator(&data[vSize]);
 }
 
 template <class T>
-inline const typename Vector<T>::Iterator Vector <T>::end() const {
-	return Vector<T>::Iterator(&vContainer[vSize]);
+inline const typename Vector<T>::Iterator Vector <T>::end() const
+{
+	return Vector<T>::Iterator(&data[vSize]);
 }
 
 template <class T>
-inline unsigned const Vector<T>::size() const {
+inline unsigned const Vector<T>::size() const
+{
 	return vSize;
 }
 
 template <class T>
-inline unsigned const Vector<T>::capacity() const {
-	return vCapacity;
-}
-
-template <class T>
-inline T Vector<T>::at(unsigned index) const {
+inline T Vector<T>::at(unsigned index) const
+{
 	if (index >= vSize)
+	{
 		throw std::out_of_range("The index is out of the range of the array.");
-	return this->vContainer[index];
+	}
+
+	return this->data[index];
 }
 
 template <class T>
-inline T& Vector<T>::at(unsigned index) {
+inline T& Vector<T>::at(unsigned index)
+{
 	if (index >= vSize)
+	{
 		throw std::out_of_range("The index is out of the range of the array.");
-	return this->vContainer[index];
+	}
+
+	return this->data[index];
 }
 
 template <class T>
-inline T Vector<T>::operator[](unsigned index) const {
+inline T Vector<T>::operator[](unsigned index) const
+{
 	if (index >= vSize)
+	{
 		throw std::out_of_range("The index is out of the range of the array.");
-	return this->vContainer[index];
+	}
+
+	return this->data[index];
 }
 
 template <class T>
-inline T& Vector<T>::operator[](unsigned index){
+inline T& Vector<T>::operator[](unsigned index)
+{
 	if (index >= vSize)
+	{
 		throw std::out_of_range("The index is out of the range of the array.");
-	return this->vContainer[index];
+	}
+
+	return this->data[index];
 }
 
 template <class T>
-void Vector<T>::resize(unsigned newCapacity) {
-	if (newCapacity <= vCapacity) return;
+void Vector<T>::resize(unsigned newCapacity)
+{
+	if (newCapacity <= this->vCapacity)
+	{
+		return;
+	}
 
-	vCapacity = newCapacity;
-	T* newContainer = new T[vCapacity];
+	this->vCapacity = newCapacity;
+	T* newdata = new T[newCapacity];
 	for (unsigned i = 0; i < vSize; i++)
-		newContainer[i] = vContainer[i];
-	delete[] vContainer;
-	vContainer = newContainer;
+	{
+		newdata[i] = this->data[i];
+	}
+	delete[] this->data;
+	this->data = newdata;
 }
 
 template <class T>
-inline void Vector<T>::push_back(T object) {
-	if (vSize >= vCapacity)
-		resize(vCapacity * 2);
-	this->vContainer[vSize++] = object;
+inline void Vector<T>::push_back(T object)
+{
+	if (vSize >= this->vCapacity)
+	{
+		resize(this->vCapacity * 2);
+	}
+
+	this->data[this->vSize] = object;
+	this->vSize++;
 }
 
 template <class T>
-inline void Vector<T>::pop() {
+inline void Vector<T>::pop()
+{
 	if (this->vSize > 0)
+	{
 		this->vSize--;
+	}
 }
 
 template <class T>
-inline void Vector<T>::remove(unsigned index) {
-	if (index >= vSize)
+inline void Vector<T>::remove(unsigned index)
+{
+	if (index >= this->vSize)
+	{
 		throw std::out_of_range("The index is out of the range of the vector.");
+	}
 	for (int i = index; i < vSize - 1; i++)
-		vContainer[i] = vContainer[i + 1];
-	vSize--;
+	{
+		data[i] = data[i + 1];
+	}
+	this->vSize--;
 }
 
