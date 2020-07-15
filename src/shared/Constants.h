@@ -1,16 +1,6 @@
 #pragma once
 #include "String.h"
-
-struct AttributeInfo {
-	String attributeName;
-	bool isInt;
-	AttributeInfo(const String& text = "", bool _isInt = false) {
-		attributeName = String(text);
-		isInt = _isInt;
-	};
-	String getName() const { return attributeName; };
-	bool intValid() const { return isInt; };
-};
+#include "AttributeInfo.h"
 
 const int commonAttrSize = 2;
 const AttributeInfo commonAttributes[commonAttrSize] = { { "fill" }, { "stroke" } };
