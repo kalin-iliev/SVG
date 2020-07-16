@@ -12,7 +12,7 @@ class Rectangle : public Shape
 	void init(const String& svgDefinition);
 	void setSVGDefinition();
 public:
-	Shape* clone();
+	Shape* clone() const;
 	Rectangle(const String&);
 	Rectangle(const Rectangle&);
 	Rectangle& operator=(const Rectangle&);

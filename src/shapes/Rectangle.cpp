@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 
-Shape* Rectangle::clone()
+Shape* Rectangle::clone() const
 {
 	return new Rectangle(*this);
 }

@@ -12,7 +12,7 @@ void Shape::setCommonAttributes(const String& svgDefinition)
 	}
 }
 
-Shape* Shape::clone()
+Shape* Shape::clone() const
 {
 	return nullptr;
 }

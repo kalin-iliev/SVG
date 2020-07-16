@@ -15,7 +15,7 @@ class Line : public Shape
 	void init(const String& svgDefinition);
 	void setSVGDefinition();
 public:
-	Shape* clone();
+	Shape* clone() const;
 	Line(const String& svgDefinition);
 	Line(const Line&);
 	Line& operator=(const Line&);

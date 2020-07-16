@@ -221,7 +221,7 @@ void SVGShapesManager::saveFile(std::ofstream& svgFile) {
 	svgFile << xmlTag << '\n';
 	svgFile << doctypeTag << '\n';
 	svgFile << openSvgTag << '\n';
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < shapes.size(); i++)
 	{
 		svgFile << shapes[i]->getSVGDefinition() << '\n';
 	}
@@ -328,89 +328,30 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 }
 
 void SVGShapesManager::clean() {
-	if (size > 0)
-	{
-		for (int i = 0; i < size; i++)
-			delete shapes[i];
-	}
-	delete[] shapes;
-	shapes = nullptr;
-}
-
-bool SVGShapesManager::resizeShapes(unsigned newCapacity) {
-	if (newCapacity <= size) return false;
-
-	Shape** newShapes = new Shape * [newCapacity];
-	if (!newShapes)
-		return false;
-
-	for (int i = 0; i < size; i++)
-		newShapes[i] = shapes[i];
-	delete[] shapes;
-	shapes = newShapes;
-	capacity = newCapacity;
-	return true;
-}
-
-bool SVGShapesManager::shiftShapes(unsigned index)
-{
-	if (!(index >= 1 && index <= size))
-		return false;
-	for (int i = index - 1; i < size - 1; i++)
-	{
+	for (int i = 0; i < shapes.size(); i++)
 		delete shapes[i];
-		shapes[i] = shapes[i + 1]->clone();
-	}
-	return true;
 }
 
-bool SVGShapesManager::addShape(Shape* shape)
+bool SVGShapesManager::addShape(const Shape* shape)
 {
-	if(size >= capacity - 1) {
-		if (!resizeShapes(capacity * 2))
-		{
-			std::cout << "Unsuccessful adding of shape. Try again." << std::endl;
-			return false;
-		}
-	}
-	shapes[size++] = shape->clone();
+	shapes.push_back(shape->clone());
 	return true;
 }
 
 bool SVGShapesManager::removeShape(unsigned index) {
-	try {
-		if (!shiftShapes(index))
-		{
-			throw (String("There is no figure at index ") + String(std::to_string(index).c_str()));
-		}
-		int middleCapacity = (capacity / 2) + (capacity % 2);
-		Shape* currentShape = shapes[index - 1]->clone();
-		if (size - 1 < middleCapacity - 1)
-		{
-			if (!resizeShapes(capacity / 2))
-			{
-				//reversing shapes back to previous state
-				for (int i = size - 1; i > index - 1; i--) {
-					delete shapes[i];
-					shapes[i] = shapes[i - 1]->clone();
-				}
-				delete shapes[index - 1];
-				shapes[index - 1] = currentShape->clone();
-				delete currentShape;
-				throw String("The figure couldn't be removed.");
-			}
-		}
-		size--;
-		delete currentShape;
+	try
+	{
+		shapes.remove(index);
 		return true;
 	}
-	catch (const String& error) {
-		throw error;
+	catch (const String& error)
+	{
+		return false;
 	}
 }
 
 void SVGShapesManager::translateShapes(long int x, long int y, unsigned id) {
-	if (!(id >= 1 && id <= size))
+	if (!(id >= 1 && id <= shapes.size()))
 	{
 		std::cout << "You must choose a shape with valid id number." << std::endl;
 		return;
@@ -420,14 +361,14 @@ void SVGShapesManager::translateShapes(long int x, long int y, unsigned id) {
 }
 
 void SVGShapesManager::translateShapes(long int x, long int y) {
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < shapes.size(); i++)
 		shapes[i]->translateCoordinates(x, y);
 	std::cout << "Successfully translated all shapes." << std::endl;
 }
 
 void SVGShapesManager::containedInCircle(const Circle& other) const {
 	bool containedShapes = false;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < shapes.size(); i++)
 	{
 		if (shapes[i]->fitsInCircle(other)) {
 			containedShapes = true;
@@ -444,7 +385,7 @@ void SVGShapesManager::containedInCircle(const Circle& other) const {
 
 void SVGShapesManager::containedInRect(const Rectangle& other) const {
 	bool containedShapes = false;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < shapes.size(); i++)
 	{
 		if (shapes[i]->fitsInRect(other)) {
 			containedShapes = true;
@@ -460,7 +401,7 @@ void SVGShapesManager::containedInRect(const Rectangle& other) const {
 }
 
 void SVGShapesManager::printShapes() const {
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < shapes.size(); i++)
 	{
 		std::cout << i + 1 << ". ";
 		shapes[i]->print();
@@ -473,9 +414,6 @@ void SVGShapesManager::loadSVGFile(const String& path) {
 		std::ifstream svgIsCorrect(path.toCharArray());
 		validateContent(svgIsCorrect);
 		
-		shapes = new Shape * [DEFAULT_CAPACITY];
-		capacity = DEFAULT_CAPACITY;
-		size = 0;
 		readFile(svgFile);
 	}
 	catch (std::bad_alloc& e)
@@ -487,25 +425,17 @@ void SVGShapesManager::loadSVGFile(const String& path) {
 	}
 }
 
-SVGShapesManager::SVGShapesManager() {
-	shapes = new Shape * [DEFAULT_CAPACITY];
-	size = 0;
-	capacity = DEFAULT_CAPACITY;
-}
+SVGShapesManager::SVGShapesManager() {}
 
 SVGShapesManager::~SVGShapesManager() {
 	this->clean();
 }
 
 void SVGShapesManager::removeShapes() {
-	if (size > 0)
+	if (shapes.size() > 0)
 	{
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < shapes.size(); i++)
 			delete shapes[i];
-		delete[] shapes;
-		shapes = new Shape * [DEFAULT_CAPACITY];
-		size = 0;
-		capacity = DEFAULT_CAPACITY;
 	}
 }
 

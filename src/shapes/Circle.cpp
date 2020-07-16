@@ -3,7 +3,7 @@
 #include <cmath>
 #include <string>
 
-Shape* Circle::clone() 
+Shape* Circle::clone() const
 {
 	return new Circle(*this);
 }

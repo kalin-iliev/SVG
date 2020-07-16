@@ -12,7 +12,7 @@ class Circle : public Shape
 	void init(const String&);
 	void setSVGDefinition();
 public:
-	Shape* clone();
+	Shape* clone() const;
 	Circle(const String&);
 	Circle(const Circle&);
 	Circle& operator=(const Circle&);

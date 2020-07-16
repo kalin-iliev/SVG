@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 
-Shape* Line::clone()
+Shape* Line::clone() const
 {
 	return new Line(*this);
 }

@@ -17,7 +17,7 @@ protected:
 public:
 	Shape(const String& svgDefinition = "");
 	Shape(const Shape&);
-	virtual Shape* clone();
+	virtual Shape* clone() const;
 	virtual Shape& operator=(const Shape&);
 
 	virtual bool fitsInCircle(const Circle&) const = 0;
