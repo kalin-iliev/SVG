@@ -7,16 +7,11 @@
 #include "Vector.h"
 #include <fstream>
 
-const int DEFAULT_CAPACITY = 10;
-
 class SVGShapesManager
 {
 	Vector<Shape*> shapes;
 private:
 	void clean();
-	void appendString(String& dest, const String& buffer, int appendSize);
-	bool isLetter(char c);
-	int attributesCount(const String&);
 	int extractAttributes(const String& text, Vector<String>& attributes);
 	int findAttributeNameIndex(const String& attrName, const Vector<String>& attributes);
 	bool validateContent(std::ifstream& svgFile); 

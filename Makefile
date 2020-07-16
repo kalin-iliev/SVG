@@ -1,12 +1,15 @@
 GCC=g++
-ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ConsoleHelpers.o obj/InputHandler.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
+ALL_O_FILES=obj/Attribute.o obj/CommonAttributes.o obj/MainAttributes.o obj/String.o obj/Shape.o obj/Circle.o obj/Line.o obj/Rectangle.o obj/ConsoleHelpers.o obj/Helpers.o obj/InputHandler.o obj/Command.o obj/SVGAppWrapper.o obj/SVGShapesManager.o
 ALL_HEADER_FILES=-Isrc/shared/utils -Isrc/shared -Isrc/shapes -Isrc/containers -Isrc -Isrc/attributes
 
-all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ConsoleHelpers.o InputHandler.o Command.o SVGAppWrapper.o SVGShapesManager.o
-	$(GCC) -o svg src/Main.cpp $(ALL_O_FILES) $(ALL_HEADER_FILES)
+all: directories Attribute.o CommonAttributes.o MainAttributes.o String.o Circle.o Line.o Rectangle.o ConsoleHelpers.o Helpers.o InputHandler.o Command.o SVGAppWrapper.o SVGShapesManager.o
+	$(GCC) -o svg src/Main.cpp $(ALL_O_FILES) $(ALL_HEADER_FILES) 
 
 directories:
 	mkdir -p obj
+
+Helpers.o: src/shared/utils/Helpers.h src/shared/utils/Helpers.cpp
+	$(GCC) -c -o obj/Helpers.o src/shared/utils/Helpers.cpp -Isrc/utils
 
 Attribute.o: src/attributes/Attribute.cpp src/attributes/Attribute.h src/containers/String.h
 	$(GCC) -c -o obj/Attribute.o src/attributes/Attribute.cpp -Isrc/containers -Isrc/shared/utils

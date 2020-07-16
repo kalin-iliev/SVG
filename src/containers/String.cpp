@@ -183,7 +183,7 @@ bool operator==(const String& firstString, const char symbol)
 char String::operator[](unsigned index) const
 {
 	if (!(index >= 0 && index <= length))
-	{
+	{	
 		throw std::out_of_range("The index is out of bounds!");
 	}
 
