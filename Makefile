@@ -20,7 +20,7 @@ AttributesContainer.o: src/attributes/AttributesContainer.cpp src/attributes/Att
 String.o: src/containers/String.cpp src/containers/String.h
 	$(GCC) -c -o obj/String.o src/containers/String.cpp -Isrc/containers -Isrc/shared/utils
 
-Shape.o: src/shapes/Shape.h src/shapes/Shape.cpp src/attributes/AttributesContainer.h src/attributes/MainAttributes.h src/containers/Vector.h src/shared/Constants.h
+Shape.o: src/shapes/Shape.h src/shapes/Shape.cpp src/attributes/AttributesContainer.h src/containers/Vector.h src/shared/Constants.h
 	$(GCC) -c -o obj/Shape.o src/shapes/Shape.cpp -Isrc/attributes -Isrc/containers -Isrc/shared/utils -Isrc/shared
 
 Circle.o: Shape.o src/shapes/Circle.cpp src/shapes/Circle.h
