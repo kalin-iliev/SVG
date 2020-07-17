@@ -133,7 +133,7 @@ Attribute::Attribute(const String& attrName, const String& attrValue, bool value
 	else {
 		name = attrName;
 		value = attrValue;
-		if (!name.size() || !value.size())
+		if (!name.size())
 		{
 			name = value = String();
 			isValueInt = isValid = false;

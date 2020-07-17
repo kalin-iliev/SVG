@@ -4,44 +4,22 @@
 #include <cstring>
 #include <new>
 
-void Shape::setCommonAttributes(const String& svgDefinition)
+Shape::Shape(const Vector<Attribute>& attributes)
+	: attributes(attributes)
+{}
+
+Shape::ShapeType Shape::getType()
 {
-	if(svgDefinition.size() > 0)
+	return this->type;
+}
+
+Attribute Shape::getAttribute(const String& attributeName) const
+{
+	int attributeIndex = this->attributes.indexOfAttribute(attributeName);
+	if (attributeIndex == -1)
 	{
-		commonAttributes = CommonAttributes(svgDefinition);
-	}
-}
-
-Shape* Shape::clone() const
-{
-	return nullptr;
-}
-
-Shape::Shape(const String& svgDefinition)
-{
-	setCommonAttributes(svgDefinition);
-}
-
-void Shape::copy(const Shape& other)
-{
-	this->commonAttributes = other.commonAttributes;
-	this->svgDefinition = other.svgDefinition;
-}
-
-Shape::Shape(const Shape& other)
-{
-	if(this != &other)
-	{
-		copy(other);
-	}
-}
-
-Shape& Shape::operator = (const Shape& other)
-{
-	if (this != &other)
-	{
-		copy(other);
+		return Attribute();
 	}
 
-	return *this;
+	return this->attributes.getAttributeByIndex(attributeIndex);
 }

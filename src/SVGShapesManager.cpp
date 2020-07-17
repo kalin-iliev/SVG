@@ -55,7 +55,7 @@ void SVGShapesManager::printCommands() const
 	std::cout << "translate [<n>]  translate shape <n> or all shapes if <n> is empty" << std::endl;
 }
 
-int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attributes)
+int SVGShapesManager::extractAttributes(const String& text, Vector<Attribute>& attributes)
 {
 	int length = 0;
 	int count = 0;
@@ -116,7 +116,7 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attr
 				}
 			}
 
-			char* attr = new char[attrSize + 1];
+			String attr(attrSize + 1);
 			bool hasAssignmentChar = false;
 			for (int p = start; p < length && currentSize < attrSize; p++) {
 				if ((isLetterOrNumber(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
@@ -134,34 +134,42 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<String>& attr
 			}
 
 			attr[attrSize] = '\0';
-			String newString(attr);
-			attributes.push_back(newString);
-			delete[] attr;
+			Attribute newAttribute;
+			if (!attr.contains('='))
+			{
+				Attribute newAttribute(attr, "", false);
+				attributes.push_back(newAttribute);
+			}
+			else
+			{
+				Attribute newAttribute(attr);
+				attributes.push_back(newAttribute);
+			}
 		}
 	}
 
 	return count;
 }
 
-int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<String>& attributes) {
+int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<Attribute>& attributes) {
 	unsigned size = attributes.size();
 	for (unsigned i = 0; i < size; i++)
-		if (attributes[i] == attrName)
+		if (attributes[i].getName() == attrName)
 			return i;
 	return -1;
 }
 
 Shape* SVGShapesManager::createShapeFromText(const String& text) {
-	Vector<String> attributes;
+	Vector<Attribute> attributes;
 	extractAttributes(text, attributes);
 
 	Shape* newShape = nullptr;
 	if (findAttributeNameIndex("circle", attributes) > -1)
-		newShape = new Circle(text);
+		newShape = new Circle(attributes);
 	else if (findAttributeNameIndex("rect", attributes) > -1)
-		newShape = new Rectangle(text);
+		newShape = new Rectangle(attributes);
 	else if (findAttributeNameIndex("line", attributes) > -1)
-		newShape = new Line(text);
+		newShape = new Line(attributes);
 
 	return newShape;
 }
@@ -306,7 +314,7 @@ bool SVGShapesManager::removeShape(unsigned index) {
 	}
 }
 
-void SVGShapesManager::translateShapes(long int x, long int y, unsigned id) {
+void SVGShapesManager::translateShapes(int x, int y, unsigned id) {
 	if (!(id >= 1 && id <= shapes.size()))
 	{
 		std::cout << "You must choose a shape with valid id number." << std::endl;
@@ -316,7 +324,7 @@ void SVGShapesManager::translateShapes(long int x, long int y, unsigned id) {
 	shapes[id - 1]->translateCoordinates(x, y);
 }
 
-void SVGShapesManager::translateShapes(long int x, long int y) {
+void SVGShapesManager::translateShapes(int x, int y) {
 	for(int i = 0; i < shapes.size(); i++)
 		shapes[i]->translateCoordinates(x, y);
 	std::cout << "Successfully translated all shapes." << std::endl;
@@ -343,7 +351,7 @@ void SVGShapesManager::containedInRect(const Rectangle& other) const {
 	bool containedShapes = false;
 	for (int i = 0; i < shapes.size(); i++)
 	{
-		if (shapes[i]->fitsInRect(other)) {
+		if (shapes[i]->fitsInRectangle(other)) {
 			containedShapes = true;
 			std::cout << i + 1 << ". ";
 			shapes[i]->print();
@@ -356,7 +364,8 @@ void SVGShapesManager::containedInRect(const Rectangle& other) const {
 	}
 }
 
-void SVGShapesManager::printShapes() const {
+void SVGShapesManager::printShapes() const
+{
 	for (int i = 0; i < shapes.size(); i++)
 	{
 		std::cout << i + 1 << ". ";

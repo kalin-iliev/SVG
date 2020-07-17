@@ -8,7 +8,6 @@ class CommonAttributes
 {
 protected:
 	Vector<String> allowedAttributes;
-	Vector<String> allowedIntAttributes;
 	Vector<Attribute> currentAttributes;
 
 	bool isLetter(char c); // TODO extract to utils
@@ -27,14 +26,11 @@ public:	// TODO move public before protected
 	void printAllowedAttributes() const;
 	Vector<String> getAllowedAttributes() const;
 	
-	void printAllowedIntAttributes() const;
-	Vector<String> getAllowedIntAttributes() const;
 
 	void printCurrentAttributes() const;
 	Vector<Attribute> getCurrentAttributes() const;
 
 	int indexOfAllowedAttribute(const String& attr) const;
-	int indexOfAllowedIntAttribute(const String& attr) const;
 	int indexOfCurrentAttribute(const String& attr) const;
 	Attribute getAttribute(unsigned index) const;
 	Attribute operator[](unsigned index) const;

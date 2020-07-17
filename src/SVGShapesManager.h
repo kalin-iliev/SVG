@@ -12,8 +12,8 @@ class SVGShapesManager
 	Vector<Shape*> shapes;
 private:
 	void clean();
-	int extractAttributes(const String& text, Vector<String>& attributes);
-	int findAttributeNameIndex(const String& attrName, const Vector<String>& attributes);
+	int extractAttributes(const String& text, Vector<Attribute>& attributes);
+	int findAttributeNameIndex(const String& attrName, const Vector<Attribute>& attributes);
 	bool validateContent(std::ifstream& svgFile); 
 	bool readFile(std::ifstream& svgFile);
 	void saveFile(std::ofstream&);
@@ -27,8 +27,8 @@ public:
 	void removeShapes();
 	bool addShape(const Shape*);
 	bool removeShape(unsigned id);
-	void translateShapes(long int x, long int y, unsigned id);
-	void translateShapes(long int x, long int y);
+	void translateShapes(int x, int y, unsigned id);
+	void translateShapes(int x, int y);
 	void containedInCircle(const Circle&) const;
 	void containedInRect(const Rectangle&) const;
 	void printShapes() const;

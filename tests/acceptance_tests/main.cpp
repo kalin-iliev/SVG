@@ -28,8 +28,13 @@ TEST(AC_test, Given_open_app_When_create_new_figure_is_chosen_Then_the_new_figur
 {
     // Arrange
     SVGShapesManager currentManager;
-    char newShapeText[] = "<circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"yellow\" />";
-    Shape* newShape = new Circle(newShapeText);
+    Vector<Attribute> shapeAttributes;
+    shapeAttributes.push_back(Attribute("circle", "", false));
+    shapeAttributes.push_back(Attribute("cx", "10", true));
+    shapeAttributes.push_back(Attribute("cy", "10", true));
+    shapeAttributes.push_back(Attribute("r", "10", true));
+    shapeAttributes.push_back(Attribute("fill", "yellow", false));
+    Shape* newShape = new Circle(shapeAttributes);
 
     char expectedShape[] = "1. circle 10 10 10 yellow\n";
 
@@ -81,8 +86,12 @@ TEST(AC_test, Given_open_app_When_within_is_chosen_Then_correct_figures_are_prin
     // Arrange
     SVGShapesManager currentManager;
     currentManager.loadSVGFile("tests/acceptance_tests/test_figures.svg");
-    char currentShapeText[] = "<circle cx=\"10\" cy=\"10\" r=\"10\" />";
-    Circle currentCircle(currentShapeText);
+    Vector<Attribute> shapeAttributes;
+    shapeAttributes.push_back(Attribute("circle", "", false));
+    shapeAttributes.push_back(Attribute("cx", "10", true));
+    shapeAttributes.push_back(Attribute("cy", "10", true));
+    shapeAttributes.push_back(Attribute("r", "10", true));
+    Circle currentCircle(shapeAttributes);
 
     char expectedMessage[] = "1. rect 5 5 10 10 green\n";
 

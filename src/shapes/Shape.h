@@ -1,35 +1,39 @@
-#pragma once
-#include "CommonAttributes.h"
-#include "MainAttributes.h"
+#ifndef SHAPE_HEADER_INCLUDED
+#define SHAPE_HEADER_INCLUDED
+
+#include "Attribute.h"
+#include "AttributesContainer.h"
 class Circle;
 class Rectangle;
 
 class Shape
 {
-	// TODO move public methods first
-	// TODO probably remove common and main attributes - use one to rule them all
-private:
-	void copy(const Shape&);
-protected:
-	CommonAttributes commonAttributes;
-	String svgDefinition;
-	void setCommonAttributes(const String& svgDefinition);
 public:
-	Shape(const String& svgDefinition = "");
-	Shape(const Shape&);
-	virtual Shape* clone() const;
-	virtual Shape& operator=(const Shape&);
+	Shape() {};
+	Shape(const Vector<Attribute>& attributes);
+	virtual ~Shape() {};
+	virtual Shape* clone() const = 0;
 
 	virtual bool fitsInCircle(const Circle&) const = 0;
-	virtual bool fitsInRect(const Rectangle&) const = 0;
+	virtual bool fitsInRectangle(const Rectangle&) const = 0;
 	virtual void translateCoordinates(int x, int y) = 0;
 
-	virtual Attribute getAttribute(const String&) const = 0;
-	virtual Vector<Attribute> getCommonAttributes() const = 0;
-	virtual Vector<Attribute> getMainAttributes() const = 0;
+	Attribute getAttribute(const String& attributeName) const;
 
-	virtual String getSVGDefinition() const = 0; // TODO implement it!
+	enum ShapeType
+	{
+		CircleType,
+		RectangleType,
+		LineType
+	};
+
+	virtual String getSVGDefinition() const = 0;
 	virtual void print() const = 0;
-	virtual String getType() const = 0; // TODO change type to enum and put it here
+	ShapeType getType();
+
+protected:
+	AttributesContainer attributes;
+	ShapeType type;
 };
 
+#endif

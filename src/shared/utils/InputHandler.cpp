@@ -317,22 +317,17 @@ void InputHandler::isWithin(const SVGShapesManager& currentManager, const Vector
 	}
 
 	String shapeType = shapeAttributes[0];
-	String shapeText;
-	Vector<String> attributes = shapeAttributes;
+	Vector<String> attributes;
 	attributes.remove(0);
 	if (shapeType == "circle")
 	{
-		shapeText = createShapeText(shapeType, attributes);
-		shapeText = '<' + shapeText + " />";
-		Circle exampleCircle = Circle(shapeText);
-		isWithinCircle(currentManager, exampleCircle);
+		Circle* exampleCircle = (Circle*)getShapeFromAttributes(Shape::ShapeType::CircleType, shapeAttributes);
+		isWithinCircle(currentManager, *exampleCircle);
 	}
-	else if (shapeType == "rectangle")
+	else if (shapeType == "rect")
 	{
-		shapeText = createShapeText(shapeType, attributes);
-		shapeText = '<' + shapeText + " />";
-		Rectangle exampleCircle = Rectangle(shapeText);
-		isWithinRectangle(currentManager, exampleCircle);
+		Rectangle* exampleCircle = (Rectangle*)getShapeFromAttributes(Shape::ShapeType::RectangleType, shapeAttributes);
+		isWithinRectangle(currentManager, *exampleCircle);
 	}
 	else
 	{
@@ -350,20 +345,23 @@ void InputHandler::isWithinRectangle(const SVGShapesManager& currentManager, con
 	currentManager.containedInRect(exampleRectangle);
 }
 
-String InputHandler::createShapeText(const String& shapeType, const Vector<String>& attributes)
+Shape* InputHandler::getShapeFromAttributes(const Shape::ShapeType shapeType, const Vector<String>& attributes)
 {
-	String currentType = shapeType;
-	if (currentType == "circle")
+	Vector<Attribute> parsedAttributes;
+	if (shapeType == Shape::ShapeType::CircleType)
 	{
-		return createShapeText(currentType, circleAttributes, circleAttrSize, attributes);
+		parsedAttributes = parseShapeAttributes(shapeType, circleAttributes, circleAttrSize, attributes);
+		return new Circle(parsedAttributes);
 	}
-	else if (currentType == "rectangle")
+	else if (shapeType == Shape::ShapeType::RectangleType)
 	{
-		return createShapeText(currentType = "rect", rectAttributes, rectAttrSize, attributes);
+		parsedAttributes = parseShapeAttributes(shapeType, rectAttributes, rectAttrSize, attributes);
+		return new Rectangle(parsedAttributes);
 	}
-	else if (currentType == "line")
+	else if (shapeType == Shape::ShapeType::LineType)
 	{
-		return createShapeText(currentType, lineAttributes, lineAttrSize, attributes);
+		parsedAttributes = parseShapeAttributes(shapeType, lineAttributes, lineAttrSize, attributes);
+		return new Line(parsedAttributes);
 	}
 	else
 	{
@@ -371,27 +369,25 @@ String InputHandler::createShapeText(const String& shapeType, const Vector<Strin
 	}
 }
 
-String InputHandler::createShapeText(const String& shapeType, const AttributeInfo currentAttributes[], int currentAttrSize,
+Vector<Attribute> InputHandler::parseShapeAttributes(const Shape::ShapeType shapeType, const AttributeInfo currentAttributes[], int currentAttrSize,
 									 const Vector<String>& attributes)
 {
-	int size = attributes.size();
-	String shapeText = shapeType;
-	int currentSize = 0;
-	int mainAttrSize = size;
-	if (currentAttrSize != mainAttrSize)
+	if (attributes.size() != currentAttrSize)
 	{
 		throw String("The shape needs the required attributes.");
 	}
 
+	Vector<Attribute> parsedAttributes;
+
 	for (int i = 0; i < currentAttrSize; i++)
 	{
-		String attrValue = attributes[currentSize++];
+		String attrValue = attributes[i];
 		bool attrValueIsInt = currentAttributes[i].isInt;
 		Attribute currentAttr = Attribute(currentAttributes[i].attributeName, attrValue, attrValueIsInt);
-		shapeText += (' ' + currentAttr.toString());
+		parsedAttributes.push_back(currentAttr);
 	}
 
-	return shapeText;
+	return parsedAttributes;
 }
 
 void InputHandler::createShape(SVGShapesManager& currentManager, const Vector<String>& shapeAttributes)
@@ -410,38 +406,27 @@ void InputHandler::createShape(SVGShapesManager& currentManager, const Vector<St
 
 	String shapeType = shapeAttributes[0];
 	Vector<String> attributes = shapeAttributes;
-	attributes.remove(0); // we remove the type
-	attributes.pop(); // we remove the fill/stroke attribute (the last attribute)
-	String shapeText = createShapeText(shapeType, attributes);
 
-	if (shapeType == "circle" || shapeType == "rect")
-	{
-		Attribute fillAttr = Attribute("fill", shapeAttributes[size - 1]);
-		shapeText += (' ' + fillAttr.toString());
-	}
-	else
-	{
-		Attribute strokeAttr = Attribute("stroke", shapeAttributes[size - 1]);
-		shapeText += (' ' + strokeAttr.toString());
-	}
-	shapeText = '<' + shapeText + " />";
-	
 	if (shapeType == "circle")
 	{
-		newShape = new Circle(shapeText);
+		newShape = getShapeFromAttributes(Shape::ShapeType::CircleType, shapeAttributes);
 	}
-	else if (shapeType == "rectangle")
+	else if (shapeType == "rect")
 	{
-		newShape = new Rectangle(shapeText);
+		newShape = getShapeFromAttributes(Shape::ShapeType::RectangleType, shapeAttributes);
 	}
 	else if (shapeType == "line")
 	{
-		newShape = new Line(shapeText);
+		newShape = getShapeFromAttributes(Shape::ShapeType::LineType, shapeAttributes);
 	}
+	else
+	{
+		throw String("Unsupported shape type.");
+	}
+	
 	currentManager.addShape(newShape);
 
 	delete newShape;
-	std::cout << "Successfully created " << shapeType << " (" << currentManager.getSize() << ")" << std::endl;
 }
 
 void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexParameter)

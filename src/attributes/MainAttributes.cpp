@@ -16,12 +16,7 @@ void MainAttributes::setCurrentAttributes(const String& text, const String& shap
 			throw String("One of the mandatory main attributes is missing.");
 		}
 		
-		bool valueIsInt = false;
-		if (findAttributeNameIndex(allowedAttributes[i], allowedIntAttributes) > -1)
-		{
-			valueIsInt = true;
-		}
-		Attribute newAttribute(attributes[indexCommonAttrInArray], valueIsInt);
+		Attribute newAttribute(attributes[indexCommonAttrInArray], false);
 		if (!newAttribute)
 		{
 			throw String("One of the mandatory main attributes is invalid.");

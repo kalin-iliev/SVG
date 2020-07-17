@@ -18,8 +18,8 @@ public:
 	void eraseShape(SVGShapesManager& currentManager, String indexParameter);
 	void closeFile();
 private:
-	String createShapeText(const String& shapeType, const Vector<String>& attributes);
-	String createShapeText(const String& shapeType, const AttributeInfo currentAttributes[], int attributeInfoSize, const Vector<String>& attributes);
+	Shape* getShapeFromAttributes(const Shape::ShapeType shapeType, const Vector<String>& attributes);
+	Vector<Attribute> parseShapeAttributes(const Shape::ShapeType shapeType, const AttributeInfo currentAttributes[], int attributeInfoSize, const Vector<String>& attributes);
 	void isWithinRectangle(const SVGShapesManager& currentManager, const Rectangle& exampleRectangle) const;
 	void isWithinCircle(const SVGShapesManager& currentManager, const Circle& exampleCircle) const;
 	void translateShapes(SVGShapesManager& currentManager, const String& xCoord, const String& yCoord, const String& index);

@@ -1,4 +1,7 @@
 #include "Line.h"
+#include "Circle.h"
+#include "Rectangle.h"
+#include "Helpers.h"
 #include <iostream>
 #include <cstring>
 
@@ -7,116 +10,76 @@ Shape* Line::clone() const
 	return new Line(*this);
 }
 
-void Line::copy(const Line& other)
+Line::Line(const Line& other)
 {
 	this->attributes = other.attributes;
-	setSVGDefinition();
+	this->type = Shape::ShapeType::LineType;
 }
 
-Attribute Line::getAttribute(const String& attributeName) const
+Line::Line(const Vector<Attribute>& attributes)
+	: Shape(attributes)
 {
-	int attributeIndex = attributes.indexOfCurrentAttribute(attributeName);
-	if (attributeIndex == -1)
-	{
-		return Attribute();
-	}
-
-	return attributes.getAttribute(attributeIndex);
-}
-
-void Line::init(const String& svgDefinition)
-{
-	this->type = "line";
-	attributes = MainAttributes(svgDefinition, this->type);
-	setSVGDefinition();
-}
-
-Line::Line(const String& svgDefinition)
-{
-	setCommonAttributes(svgDefinition);
-	init(svgDefinition);
-}
-
-Line::Line(const Line& other) : Shape(other)
-{
-	if (this != &other)
-	{
-		copy(other);
-	}
-}
-
-Line& Line::operator=(const Line& other)
-{
-	if (this != &other)
-	{
-		Shape::operator=(other);
-		copy(other);
-	}
-	return *this;
+	this->type = Shape::ShapeType::LineType;
 }
 
 void Line::translateCoordinates(int x, int y)
 {
-	unsigned x1AttributeIndex = attributes.indexOfCurrentAttribute("x1");
-	unsigned y1AttributeIndex = attributes.indexOfCurrentAttribute("y1");
-	unsigned x2AttributeIndex = attributes.indexOfCurrentAttribute("x2");
-	unsigned y2AttributeIndex = attributes.indexOfCurrentAttribute("y2");
+	unsigned x1AttributeIndex = attributes.indexOfAttribute("x1");
+	unsigned y1AttributeIndex = attributes.indexOfAttribute("y1");
+	unsigned x2AttributeIndex = attributes.indexOfAttribute("x2");
+	unsigned y2AttributeIndex = attributes.indexOfAttribute("y2");
 	if (x1AttributeIndex < 0 || y1AttributeIndex < 0 || x2AttributeIndex < 0 || y2AttributeIndex < 0)
 	{
 		throw String("Invalid line object attributes. Cannot translate.");
 	}
 
-	long int x1 = attributes[x1AttributeIndex].getValue().toInt();
-	long int y1 = attributes[y1AttributeIndex].getValue().toInt();
-	long int x2 = attributes[x2AttributeIndex].getValue().toInt();
-	long int y2 = attributes[y2AttributeIndex].getValue().toInt();
+	int x1 = attributes[x1AttributeIndex].getValue().toInt();
+	int y1 = attributes[y1AttributeIndex].getValue().toInt();
+	int x2 = attributes[x2AttributeIndex].getValue().toInt();
+	int y2 = attributes[y2AttributeIndex].getValue().toInt();
 
 	x1 += x;
 	x2 += x;
 	y1 += y;
 	y2 += y;
 
-	// TODO reuse the util from Circle
-	String bufferX1;
-	String bufferX2;
-	String bufferY1;
-	String bufferY2;
-	bufferX1 = String(std::to_string(x1).c_str());
-	bufferY1 = String(std::to_string(y1).c_str());
-	bufferX2 = String(std::to_string(x2).c_str());
-	bufferY2 = String(std::to_string(y2).c_str());
+	String bufferX1 = intToString(x1);
+	String bufferX2 = intToString(y1);
+	String bufferY1 = intToString(x2);
+	String bufferY2 = intToString(y2);
 	attributes.setAttributeValue(x1AttributeIndex, bufferX1);
 	attributes.setAttributeValue(y1AttributeIndex, bufferY1);
 	attributes.setAttributeValue(x2AttributeIndex, bufferX2);
 	attributes.setAttributeValue(y2AttributeIndex, bufferY2);
-	setSVGDefinition();
 }
 
-void Line::setSVGDefinition()
+String Line::getSVGDefinition() const
 {
-	this->svgDefinition = ('<' + type + ' ' + attributes.currentAttributesToString() + ' ' + commonAttributes.currentAttributesToString() + " />");
+	String svg("<line ");
+	svg += attributes.toString();
+	svg += " />";
+
+	return svg;
 }
 
 void Line::print() const
 {
-	std::cout << type << " ";
-	attributes.printCurrentAttributes();
-	std::cout << ' ';
-	commonAttributes.printCurrentAttributes();
+	std::cout << "line";
+	attributes.printAttributes();
 	std::cout << std::endl;
 }
 
-bool Line::fitsInRect(const Rectangle& other) const
+bool Line::fitsInRectangle(const Rectangle& other) const
 {
-	long int currX1 = getAttribute("x1").getValue().toInt();
-	long int currY1 = getAttribute("y1").getValue().toInt();
-	long int currX2 = getAttribute("x2").getValue().toInt();
-	long int currY2 = getAttribute("y2").getValue().toInt();
+	int currX1 = getAttribute("x1").getValue().toInt();
+	int currY1 = getAttribute("y1").getValue().toInt();
+	int currX2 = getAttribute("x2").getValue().toInt();
+	int currY2 = getAttribute("y2").getValue().toInt();
 
-	long int rectX = other.getAttribute("x").getValue().toInt();
-	long int rectY = other.getAttribute("y").getValue().toInt();
-	long int width = other.getAttribute("width").getValue().toInt();
-	long int height = other.getAttribute("height").getValue().toInt();
+	int rectX = other.getAttribute("x").getValue().toInt();
+	int rectY = other.getAttribute("y").getValue().toInt();
+	int width = other.getAttribute("width").getValue().toInt();
+	int height = other.getAttribute("height").getValue().toInt();
 
 	bool firstPointIsInside = (currX1 >= rectX && currX1 <= rectX + width) && (currY1 >= rectY && currY1 <= rectY + height);
 	bool secondPointIsInside = (currX2 >= rectX && currX2 <= rectX + width) && (currY2 >= rectY && currY2 <= rectY + height);
@@ -126,14 +89,14 @@ bool Line::fitsInRect(const Rectangle& other) const
 
 bool Line::fitsInCircle(const Circle& other) const
 {
-	long int currX1 = getAttribute("x1").getValue().toInt();
-	long int currY1 = getAttribute("y1").getValue().toInt();
-	long int currX2 = getAttribute("x2").getValue().toInt();
-	long int currY2 = getAttribute("y2").getValue().toInt();
+	int currX1 = getAttribute("x1").getValue().toInt();
+	int currY1 = getAttribute("y1").getValue().toInt();
+	int currX2 = getAttribute("x2").getValue().toInt();
+	int currY2 = getAttribute("y2").getValue().toInt();
 
-	long int cx = other.getAttribute("cx").getValue().toInt();
-	long int cy = other.getAttribute("cy").getValue().toInt();
-	long int radius = other.getAttribute("r").getValue().toInt();
+	int cx = other.getAttribute("cx").getValue().toInt();
+	int cy = other.getAttribute("cy").getValue().toInt();
+	int radius = other.getAttribute("r").getValue().toInt();
 
 
 	int pointOneDistanceSquared = (cx - currX1) * (cx - currX1) + (cy - currY1) * (cy - currY1);
@@ -142,14 +105,4 @@ bool Line::fitsInCircle(const Circle& other) const
 	bool secondPointIsInside = pointTwoDistanceSquared <= radius * radius;
 
 	return firstPointIsInside && secondPointIsInside;
-}
-
-Vector<Attribute> Line::getCommonAttributes() const
-{ 
-	return commonAttributes.getCurrentAttributes();
-}
-
-Vector<Attribute> Line::getMainAttributes() const
-{
-	return attributes.getCurrentAttributes();
 }
