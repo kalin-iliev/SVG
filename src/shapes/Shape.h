@@ -3,6 +3,7 @@
 
 #include "Attribute.h"
 #include "AttributesContainer.h"
+#include "Point2D.h"
 
 class Circle;
 class Rectangle;
@@ -17,7 +18,7 @@ public:
 
 	virtual bool fitsInCircle(const Circle&) const = 0;
 	virtual bool fitsInRectangle(const Rectangle&) const = 0;
-	virtual void translateCoordinates(int x, int y) = 0;
+	virtual void translateCoordinates(Point2D translationPoint) = 0;
 
 	Attribute getAttribute(const String& attributeName) const;
 

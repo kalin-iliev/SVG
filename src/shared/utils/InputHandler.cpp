@@ -1,4 +1,5 @@
 #include "InputHandler.h"
+#include "Point2D.h"
 
 void InputHandler::loadFile(SVGShapesManager& currentManager, const String& filePath)
 {
@@ -277,17 +278,18 @@ void InputHandler::translateShapes(SVGShapesManager& currentManager, const Strin
 
 	int xTranslate = xCoord.toInt();
 	int yTranslate = yCoord.toInt();
+	Point2D translationPoint(xTranslate, yTranslate);
 	int indexShape = index.toInt();
 
 	if (xTranslate != 0 || yTranslate != 0)
 	{
 		if (indexShape > -1)
 		{
-			currentManager.translateShapes(xTranslate, yTranslate, indexShape);
+			currentManager.translateShapes(translationPoint, indexShape);
 		}
 		else
 		{
-			currentManager.translateShapes(xTranslate, yTranslate);
+			currentManager.translateShapes(translationPoint);
 		}
 	}
 }

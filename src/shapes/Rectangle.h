@@ -2,6 +2,7 @@
 #define RECTANGLE_HEADER_INCLUDED
 
 #include "Shape.h"
+#include "Point2D.h"
 
 class Rectangle : public Shape
 {
@@ -11,7 +12,7 @@ public:
 
 	bool fitsInRectangle(const Rectangle&) const;
 	bool fitsInCircle(const Circle&) const;
-	void translateCoordinates(int x, int y);
+	void translateCoordinates(Point2D translationPoint);
 
 	String getSVGDefinition() const;
 	void print() const;

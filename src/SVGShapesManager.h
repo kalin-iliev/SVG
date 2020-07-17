@@ -9,6 +9,7 @@
 #include "Line.h"
 #include "String.h"
 #include "Vector.h"
+#include "Point2D.h"
 
 class SVGShapesManager
 {
@@ -23,8 +24,8 @@ public:
 	bool addShape(const Shape*);
 	bool removeShape(unsigned id);
 
-	void translateShapes(int x, int y, unsigned id);
-	void translateShapes(int x, int y);
+	void translateShapes(Point2D point, unsigned id);
+	void translateShapes(Point2D point);
 
 	void containedInCircle(const Circle&) const;
 	void containedInRect(const Rectangle&) const;

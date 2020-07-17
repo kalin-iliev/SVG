@@ -16,7 +16,7 @@ public:
 	bool fitsInRectangle(const Rectangle&) const; 
 	bool fitsInCircle(const Circle&) const;
 
-	void translateCoordinates(int x, int y);
+	void translateCoordinates(Point2D translationPoint);
 	String getSVGDefinition() const;
 	void print() const;
 

@@ -276,7 +276,7 @@ bool SVGShapesManager::removeShape(unsigned index)
 	}
 }
 
-void SVGShapesManager::translateShapes(int x, int y, unsigned id)
+void SVGShapesManager::translateShapes(Point2D point, unsigned id)
 {
 	if (!(id >= 1 && id <= shapes.size()))
 	{
@@ -284,15 +284,15 @@ void SVGShapesManager::translateShapes(int x, int y, unsigned id)
 		return;
 	}
 	
-	shapes[id - 1]->translateCoordinates(x, y);
+	shapes[id - 1]->translateCoordinates(point);
 	std::cout << "Successfully translated shape at index " << id << std::endl;
 }
 
-void SVGShapesManager::translateShapes(int x, int y)
+void SVGShapesManager::translateShapes(Point2D point)
 {
 	for(int i = 0; i < shapes.size(); i++)
 	{
-		shapes[i]->translateCoordinates(x, y);
+		shapes[i]->translateCoordinates(point);
 	}
 
 	std::cout << "Successfully translated all shapes." << std::endl;

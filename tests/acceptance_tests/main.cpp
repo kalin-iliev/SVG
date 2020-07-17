@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../../src/SVGShapesManager.h"
+#include "../../src/shared/Point2D.h"
 
 const char* MOCK_FILE_CONTENT = "1. rect 5 5 10 10 green\n2. circle 5 5 5 blue\n3. rect 100 60 10 10 red\n4. rect 1 1 30 30 yellow\n5. circle 0 0 1 yellow\n";
 
@@ -72,7 +73,7 @@ TEST(AC_test, Given_open_app_When_translate_one_figure_is_chosen_Then_the_figure
     testing::internal::CaptureStdout();
 
     // Act
-    currentManager.translateShapes(3, 2, 2);
+    currentManager.translateShapes(Point2D(3, 2), 2);
     currentManager.printShapes();
 
     // Assert

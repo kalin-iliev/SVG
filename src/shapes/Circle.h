@@ -4,6 +4,7 @@
 #include "Shape.h"
 #include "Attribute.h"
 #include "Helpers.h"
+#include "Point2D.h"
 
 class Circle : public Shape
 {
@@ -13,7 +14,7 @@ public:
 
 	bool fitsInRectangle(const Rectangle&) const;
 	bool fitsInCircle(const Circle&) const;
-	void translateCoordinates(int x, int y);
+	void translateCoordinates(Point2D translationPoint);
 
 	String getSVGDefinition() const;
 	void print() const;

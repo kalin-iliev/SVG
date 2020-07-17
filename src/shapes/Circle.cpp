@@ -25,7 +25,7 @@ Circle::Circle(const Circle& other)
 	}
 }
 
-void Circle::translateCoordinates(int translateX, int translateY)
+void Circle::translateCoordinates(Point2D translationPoint)
 {
 	unsigned indexOfCxAttribute = attributes.indexOfAttribute("cx");
 	unsigned indexOfCyAttribute = attributes.indexOfAttribute("cy");
@@ -36,11 +36,12 @@ void Circle::translateCoordinates(int translateX, int translateY)
 
 	int cx = attributes[indexOfCxAttribute].getValue().toInt();
 	int cy = attributes[indexOfCyAttribute].getValue().toInt();
-	cx += translateX;
-	cy += translateY;
+	Point2D center(cx, cy);
+	
+	center += translationPoint;
 
-	String newCx = intToString(cx);
-	String newCy = intToString(cy);
+	String newCx = intToString(center.x);
+	String newCy = intToString(center.y);
 	attributes.setAttributeValueByIndex(indexOfCxAttribute, newCx);
 	attributes.setAttributeValueByIndex(indexOfCyAttribute, newCy);
 }
@@ -65,14 +66,18 @@ bool Circle::fitsInCircle(const Circle& other) const
 {
 	int cx = getAttribute("cx").getValue().toInt();
 	int cy = getAttribute("cy").getValue().toInt();
+	Point2D center(cx, cy);
+
 	int radius = getAttribute("r").getValue().toInt();
 
 	int otherCx = other.getAttribute("cx").getValue().toInt();
 	int otherCy = other.getAttribute("cy").getValue().toInt();
+	Point2D otherPointCenter(otherCx, otherCy);
+
 	int otherRadius = other.getAttribute("r").getValue().toInt();
 
 	int radiusDiff = (otherRadius - radius);
-	int distanceRadiusSquared = (cx - otherCx) * (cx - otherCx) + (cy - otherCy) * (cy - otherCy);
+	int distanceRadiusSquared = center.squaredDistanceTo(otherPointCenter);
 
 	if (distanceRadiusSquared <= radiusDiff * radiusDiff)
 	{
@@ -88,29 +93,33 @@ bool Circle::fitsInRectangle(const Rectangle& other) const
 {
 	int cx = getAttribute("cx").getValue().toInt();
 	int cy = getAttribute("cy").getValue().toInt();
+	Point2D center(cx, cy);
+
 	int radius = getAttribute("r").getValue().toInt();
 
 	int rectX = other.getAttribute("x").getValue().toInt();
 	int rectY = other.getAttribute("y").getValue().toInt();
+	Point2D rectanglePoint(rectX, rectY);
+
 	int rectWidth = other.getAttribute("width").getValue().toInt();
 	int rectHeight = other.getAttribute("height").getValue().toInt();
 
-	if (!(cx > rectX && cx < (rectX + rectWidth)))
+	if (!(center.x > rectanglePoint.x && center.x < (rectanglePoint.x + rectWidth)))
 	{
 		return false;
 	}
 
-	if (!(cy > rectY && cy < (rectY + rectHeight)))
+	if (!(center.y > rectanglePoint.y && center.y < (rectanglePoint.y + rectHeight)))
 	{
 		return false;
 	}
 
-	if ((cx + radius) > (rectX + rectWidth) || (cx - radius) < rectX)
+	if ((center.x + radius) > (rectanglePoint.x + rectWidth) || (center.x - radius) < rectanglePoint.x)
 	{
 		return false;
 	}
 
-	if ((cy + radius) > (rectY + rectWidth) || (cy - radius) < rectY)
+	if ((center.y + radius) > (rectanglePoint.y + rectWidth) || (center.y - radius) < rectanglePoint.y)
 	{
 		return false;
 	}

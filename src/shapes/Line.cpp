@@ -23,7 +23,7 @@ Line::Line(const Vector<Attribute>& attributes)
 	this->type = Shape::ShapeType::LineType;
 }
 
-void Line::translateCoordinates(int x, int y)
+void Line::translateCoordinates(Point2D translationPoint)
 {
 	unsigned x1AttributeIndex = attributes.indexOfAttribute("x1");
 	unsigned y1AttributeIndex = attributes.indexOfAttribute("y1");
@@ -36,18 +36,19 @@ void Line::translateCoordinates(int x, int y)
 
 	int x1 = attributes[x1AttributeIndex].getValue().toInt();
 	int y1 = attributes[y1AttributeIndex].getValue().toInt();
+	Point2D pointA(x1, y1);
+
 	int x2 = attributes[x2AttributeIndex].getValue().toInt();
 	int y2 = attributes[y2AttributeIndex].getValue().toInt();
+	Point2D pointB(x2, y2);
 
-	x1 += x;
-	x2 += x;
-	y1 += y;
-	y2 += y;
+	pointA += translationPoint;
+	pointB += translationPoint;
 
-	String bufferX1 = intToString(x1);
-	String bufferX2 = intToString(y1);
-	String bufferY1 = intToString(x2);
-	String bufferY2 = intToString(y2);
+	String bufferX1 = intToString(pointA.x);
+	String bufferX2 = intToString(pointA.y);
+	String bufferY1 = intToString(pointB.x);
+	String bufferY2 = intToString(pointB.y);
 	attributes.setAttributeValue(x1AttributeIndex, bufferX1);
 	attributes.setAttributeValue(y1AttributeIndex, bufferY1);
 	attributes.setAttributeValue(x2AttributeIndex, bufferX2);
@@ -74,16 +75,23 @@ bool Line::fitsInRectangle(const Rectangle& other) const
 {
 	int currX1 = getAttribute("x1").getValue().toInt();
 	int currY1 = getAttribute("y1").getValue().toInt();
+	Point2D pointA(currX1, currY1);
+
 	int currX2 = getAttribute("x2").getValue().toInt();
 	int currY2 = getAttribute("y2").getValue().toInt();
+	Point2D pointB(currX2, currY2);
 
 	int rectX = other.getAttribute("x").getValue().toInt();
 	int rectY = other.getAttribute("y").getValue().toInt();
+	Point2D rectanglePoint(rectX, rectY);
+
 	int width = other.getAttribute("width").getValue().toInt();
 	int height = other.getAttribute("height").getValue().toInt();
 
-	bool firstPointIsInside = (currX1 >= rectX && currX1 <= rectX + width) && (currY1 >= rectY && currY1 <= rectY + height);
-	bool secondPointIsInside = (currX2 >= rectX && currX2 <= rectX + width) && (currY2 >= rectY && currY2 <= rectY + height);
+	bool firstPointIsInside = (pointA.x >= rectanglePoint.x && pointA.x <= rectanglePoint.x + width) && 
+							  (pointA.y >= rectanglePoint.y && pointA.y <= rectanglePoint.y + height);
+	bool secondPointIsInside = (pointB.x >= rectanglePoint.x && pointB.x <= rectanglePoint.x + width) &&
+							   (pointB.y >= rectanglePoint.y && pointB.y <= rectanglePoint.y + height);
 
 	return firstPointIsInside && secondPointIsInside;
 }
@@ -92,16 +100,20 @@ bool Line::fitsInCircle(const Circle& other) const
 {
 	int currX1 = getAttribute("x1").getValue().toInt();
 	int currY1 = getAttribute("y1").getValue().toInt();
+	Point2D pointA(currX1, currY1);
+
 	int currX2 = getAttribute("x2").getValue().toInt();
 	int currY2 = getAttribute("y2").getValue().toInt();
+	Point2D pointB(currX2, currY2);
 
 	int cx = other.getAttribute("cx").getValue().toInt();
 	int cy = other.getAttribute("cy").getValue().toInt();
+	Point2D center(cx, cy);
+
 	int radius = other.getAttribute("r").getValue().toInt();
 
-
-	int pointOneDistanceSquared = (cx - currX1) * (cx - currX1) + (cy - currY1) * (cy - currY1);
-	int pointTwoDistanceSquared = (cx - currX2) * (cx - currX2) + (cy - currY2) * (cy - currY2);
+	int pointOneDistanceSquared = center.squaredDistanceTo(pointA);
+	int pointTwoDistanceSquared = center.squaredDistanceTo(pointB);
 	bool firstPointIsInside = pointOneDistanceSquared <= radius * radius;
 	bool secondPointIsInside = pointTwoDistanceSquared <= radius * radius;
 
