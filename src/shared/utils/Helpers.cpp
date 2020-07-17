@@ -37,3 +37,26 @@ String intToString(int x)
     result[stringSize] = '\0';
     return result;
 }
+
+
+bool isInt(char c)
+{
+    return c >= '0' && c <= '9';
+}
+
+bool isInt(const String& string)
+{
+    int startIndex = 0;
+    if (string[0] == '-')
+    {
+        startIndex = 1;
+    }
+    for (int i = startIndex; i < string.size(); ++i)
+    {
+        if (!isInt(string[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}

@@ -146,6 +146,10 @@ String& String::operator+=(const char symbol)
 	newData[this->length] = symbol;
 	newData[this->length + 1] = '\0';
 
+	delete[] this->data;
+	this->data = newData;
+	this->length++;
+
 	return *this;
 }
 

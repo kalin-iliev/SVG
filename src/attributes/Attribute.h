@@ -6,13 +6,11 @@ private:
 	String name;
 	String value;
 	bool isValid;
-	bool isValueInt; // TODO change to attribute type enum
+	bool isValueInt;
 private:
-	bool isLetter(char c); // TODO move to utils
-	String getAttrValue(const String&); // TODO remove - use this->getValue() instead
-	String getAttrName(const String&); // TODO remove - use this->getName() instead
-	bool isInt(char c); // TODO move to utils
-	bool isInt(const String&); //TODO move to utils
+	String getAttrValue(const String&);
+	String getAttrName(const String&);
+
 public:
 	Attribute();
 	Attribute(const String& attributeName, const String& attributeValue, bool isValueInt = false);

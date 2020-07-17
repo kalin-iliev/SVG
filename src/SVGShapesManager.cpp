@@ -134,17 +134,8 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<Attribute>& a
 			}
 
 			attr[attrSize] = '\0';
-			Attribute newAttribute;
-			if (!attr.contains('='))
-			{
-				Attribute newAttribute(attr, "", false);
-				attributes.push_back(newAttribute);
-			}
-			else
-			{
-				Attribute newAttribute(attr);
-				attributes.push_back(newAttribute);
-			}
+			Attribute newAttribute(attr);
+			attributes.push_back(newAttribute);
 		}
 	}
 
