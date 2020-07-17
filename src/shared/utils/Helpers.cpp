@@ -10,6 +10,16 @@ bool isLetterOrNumber(char c)
     return isLetter(c) || (c >= '0' && c <= '9');
 }
 
+bool isUpperCase(char c)
+{
+    return c >= 'A' && c <= 'Z';
+}
+
+bool isLowerCase(char c)
+{
+    return c >= 'a' && c <= 'z';
+}
+
 int numberOfDigits(int x)
 {
     if (x >= 0 && x < 10)

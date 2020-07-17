@@ -6,17 +6,6 @@ const int MAX_READ_SIZE = 1024;
 
 class String
 {
-
-// TODO place public methods first
-private:
-	char* data;
-	unsigned length;
-private:
-	void setData(const char* newValue);
-	void copy(const String& secondString);
-	bool isCharLetter(char c) const; // TIDO extract to utils
-	bool isCharUpper(char c) const; // TIDO extract to utils
-	bool isCharLower(char c) const; // TIDO extract to utils
 public:
 	String(unsigned size = 0);
 	String(const char* data);
@@ -49,7 +38,6 @@ public:
 	friend std::istream& operator >> (std::istream& inputStream, String& currentString);
 
 	int toInt() const;
-	float toFloat() const;
 	bool beginsWith(char) const;
 	bool beginsWith(const String&) const;
 	bool contains(char c) const;
@@ -65,5 +53,11 @@ public:
 	const char* toCharArray() const;
 
 	operator bool() const;
-};
 
+private:
+	char* data;
+	unsigned length;
+
+	void setData(const char* newValue);
+	void copy(const String& secondString);
+};

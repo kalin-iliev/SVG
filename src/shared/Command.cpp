@@ -1,13 +1,10 @@
 #include "Command.h"
+#include "Helpers.h"
 
 bool Command::isSymbolValid(char c)
 {
 	// TODO refactor - use isLetter, isNumber from utils
-	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-		   (c == '\\') || (c == '/') ||
-		(c == '.') || (c == ':') ||
-		(c >= '0' && c <= '9') ||
-		(c == '_') || (c == '-');
+	return isLetterOrNumber(c) || (c == '\\') || (c == '/') || (c == '.') || (c == ':') || (c == '_') || (c == '-');
 }
 
 int Command::extractCommand(const String& text, Vector<String>& words)
@@ -15,61 +12,43 @@ int Command::extractCommand(const String& text, Vector<String>& words)
 	int countCommandWords = 0;
 	bool isEqualFound = false;
 	bool isWordFoundAfterEqual = false;
-	int length = 0;
-	while (text[length])
+	int textIndex = 0;
+	while (text[textIndex])
 	{
-		while (text[length] && !isSymbolValid(text[length]))
-		{  // skip letters to the beginning of a word
-			++length;
-		}
-		if (text[length] && text[length] != '=' && !isEqualFound)
+		isEqualFound = false;
+		while (text[textIndex] && !isSymbolValid(text[textIndex]))
 		{
-			++countCommandWords; // if there is a word, count it
+			++textIndex;
 		}
 
-		if (text[length] && text[length] != '=')
+		if (text[textIndex] && text[textIndex] != '=')
 		{
-			int start = length;
-			int attrSize = 0;
-			int currentSize = 0;
+			++countCommandWords;
+			int startIndex = textIndex;
 
-			while (text[length] && isSymbolValid(text[length]))
-			{  // skip to the end of the word
-				++attrSize;
-				++length;
-			}
-			if (isEqualFound)
+			while (text[textIndex] && isSymbolValid(text[textIndex]))
 			{
-				isEqualFound = false;
+				++textIndex;
 			}
-			while (text[length] && !isSymbolValid(text[length]))
+			while (text[textIndex] && !isSymbolValid(text[textIndex]))
 			{
-				if (text[length] == '=')
+				if (text[textIndex] == '=')
 				{
 					isEqualFound = true;
-					++attrSize;
-					++length;
 				}
-				else {
-					++length;
-				}
+				++textIndex;
 			}
 
-			while (text[length] && isSymbolValid(text[length]) && isEqualFound)
+			while (text[textIndex] && isSymbolValid(text[textIndex]) && isEqualFound)
 			{
-				++attrSize;
-				++length;
+				++textIndex;
 			}
 
-			isEqualFound = false;
-
-			String newString(attrSize);
-			for (int i = start; i < length; i++)
+			int attributeSize = textIndex - startIndex;
+			String newString(attributeSize);
+			for (int i = startIndex; i < textIndex; i++)
 			{
-				if (isSymbolValid(text[i]) || text[i] == '=')
-				{
-					newString[currentSize++] = text[i];
-				}
+				newString[i] = text[i];
 			}
 
 			words.push_back(newString);

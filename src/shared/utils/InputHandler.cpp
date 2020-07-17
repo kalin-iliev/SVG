@@ -275,21 +275,9 @@ void InputHandler::translateShapes(SVGShapesManager& currentManager, const Strin
 		}
 	}
 
-	int xTranslate = 0;
-	if (xCoord)
-	{
-		xCoord.toInt();
-	}
-	int yTranslate = 0;
-	if (yCoord)
-	{
-		yCoord.toInt();
-	}
-	int indexShape = 0;
-	if (index)
-	{
-		index.toInt();
-	}
+	int xTranslate = xCoord.toInt();
+	int yTranslate = yCoord.toInt();
+	int indexShape = index.toInt();
 
 	if (xTranslate != 0 || yTranslate != 0)
 	{

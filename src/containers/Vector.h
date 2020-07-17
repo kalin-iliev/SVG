@@ -5,11 +5,6 @@ const int DEFAULT_VECTOR_CAPACITY = 20;
 template<class T>
 class Vector
 {
-	// TODO put public first
-private:
-	T* data;
-	unsigned vSize;
-	unsigned vCapacity;
 public:
 	Vector(unsigned capacity = DEFAULT_VECTOR_CAPACITY);
 	Vector(const Vector<T>& other);
@@ -35,6 +30,10 @@ public:
 	T& operator[](unsigned index);
 
 private:
+	T* data;
+	unsigned vSize;
+	unsigned vCapacity;
+
 	void clear();
 	void resize(unsigned newCapacity);
 };
@@ -42,9 +41,6 @@ private:
 template <class T>
 class Vector<T>::Iterator
 {
-	// TODO put public first
-private:
-	T* currentData;
 public:
 	Iterator(T* data) : currentData(data) {}
 
@@ -89,6 +85,9 @@ public:
 	{
 		return !(*this == other);
 	}
+
+private:
+	T* currentData;
 };
 
 template <class T>
@@ -100,13 +99,15 @@ void Vector<T>::clear()
 }
 
 template <class T>
-Vector<T>::Vector(unsigned vCapacity) : vSize(0), vCapacity(vCapacity)
+Vector<T>::Vector(unsigned vCapacity)
+	: vSize(0), vCapacity(vCapacity)
 {
 	data = new T[vCapacity];
 }
 
 template <class T>
-Vector<T>::Vector(const Vector<T>& other) : vSize(other.vSize), vCapacity(other.vCapacity)
+Vector<T>::Vector(const Vector<T>& other)
+	: vSize(other.vSize), vCapacity(other.vCapacity)
 {
 	data = new T[other.vCapacity];
 	for (unsigned i = 0; i < other.vSize; i++)

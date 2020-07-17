@@ -1,4 +1,5 @@
 #include "String.h"
+#include "Helpers.h"
 
 void String::setData(const char* newValue)
 {
@@ -15,21 +16,6 @@ void String::setData(const char* newValue)
 void String::copy(const String& secondString)
 {
 	setData(secondString.data);
-}
-
-bool String::isCharLetter(char c) const
-{
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
-}
-
-bool String::isCharUpper(char c) const
-{
-	return isCharLetter(c) && (c >= 'A' && c <= 'Z');
-}
-
-bool String::isCharLower(char c) const
-{
-	return isCharLetter(c) && (c >= 'a' && c <= 'z');
 }
 
 String::String(unsigned size)
@@ -227,11 +213,6 @@ int String::toInt() const
 	return atoi(data);
 }
 
-float String::toFloat() const
-{
-	return atof(data);
-}
-
 bool String::beginsWith(char c) const
 {
 	return data[0] == c;
@@ -369,7 +350,7 @@ String String::toLowerCase() const
 	char* result = new char[length + 1];
 	for (int i = 0; i < length; i++)
 	{
-		if (isCharUpper(data[i]))
+		if (isUpperCase(data[i]))
 		{
 			// TODO create util
 			result[i] = data[i] - 'A' + 'a';
@@ -389,7 +370,7 @@ String String::toUpperCase() const {
 	char* result = new char[length + 1];
 	for (int i = 0; i < length; i++)
 	{
-		if (isCharLower(data[i]))
+		if (isLowerCase(data[i]))
 		{
 			// TODO create util
 			result[i] = data[i] - 'a' + 'A';

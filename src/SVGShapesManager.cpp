@@ -102,8 +102,12 @@ int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vecto
 {
 	unsigned size = attributes.size();
 	for (unsigned i = 0; i < size; i++)
+	{
 		if (attributes[i].getName() == attrName)
+		{
 			return i;
+		}
+	}
 	return -1;
 }
 
@@ -114,11 +118,17 @@ Shape* SVGShapesManager::createShapeFromText(const String& text)
 
 	Shape* newShape = nullptr;
 	if (findAttributeNameIndex("circle", attributes) > -1)
+	{
 		newShape = new Circle(attributes);
+	}
 	else if (findAttributeNameIndex("rect", attributes) > -1)
+	{
 		newShape = new Rectangle(attributes);
+	}
 	else if (findAttributeNameIndex("line", attributes) > -1)
+	{
 		newShape = new Line(attributes);
+	}
 
 	return newShape;
 }
@@ -191,9 +201,6 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile)
 	{
 		char c;
 		String fileLine;
-		int pos = 0;
-		const int BUFFER_SIZE = 100;
-		String buffer(BUFFER_SIZE);
 		bool foundOpenBrace = false;
 		bool foundFirstSvg = false;
 		while ((c = svgFile.get()) && !svgFile.eof())
@@ -204,23 +211,11 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile)
 			}
 			if (foundOpenBrace)
 			{
-				buffer[pos++] = c;
-				if (pos == BUFFER_SIZE)
-				{
-					fileLine += buffer;
-					pos = 0;
-				}
+				fileLine += c;
 			}
 
 			if (c == '>')
 			{
-				String line(pos);
-				for (int i = 0; i < pos; i++)
-				{
-			 		line[i] = buffer[i];
-				}
-				fileLine +=  line;
-
 				if (fileLine.contains("svg") && !fileLine.contains('!'))
 				{
 					if (!foundFirstSvg)
@@ -246,7 +241,6 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile)
 				}
 				foundOpenBrace = false;
 				fileLine = String();
-				pos = 0;
 			}
 		}
 	}

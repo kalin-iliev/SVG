@@ -84,24 +84,22 @@ Attribute& AttributesContainer::operator[](unsigned index)
 void AttributesContainer::setAttributeValue(const String& attribute, const String& newValue)
 {
     int attributeIndex = indexOfAttribute(attribute);
-    if (attributeIndex > -1)
+    if (attributeIndex == -1)
     {
-        this->attributes[attributeIndex].setValue(newValue);
+        throw String("No attribute found.");
     }
-    else
-    {
-        // TODO throw exception
-        std::cout << "Couldn't find the attribute.";
-    }
+    
+    this->attributes[attributeIndex].setValue(newValue);
 }
 
 void AttributesContainer::setAttributeValueByIndex(unsigned attributeIndex, const String& newValue)
 {
-    if (attributeIndex < this->attributes.size())
+    if (attributeIndex < 0 || attributeIndex >= this->attributes.size())
     {
-        this->attributes[attributeIndex].setValue(newValue);
+        throw String("Invalid attribute index.");
     }
-    // TODO else throw exception
+
+    this->attributes[attributeIndex].setValue(newValue);
 }
 
 String AttributesContainer::toString() const
