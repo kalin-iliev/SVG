@@ -57,89 +57,45 @@ void SVGShapesManager::printCommands() const
 
 int SVGShapesManager::extractAttributes(const String& text, Vector<Attribute>& attributes)
 {
-	int length = 0;
-	int count = 0;
-	while(text[length])
+	int textIndex = 0;
+	int attributesCount = 0;
+	while(text[textIndex])
 	{
-		while (text[length] && !isLetterOrNumber(text[length]))
-		{  // skip letters to the beginning of a word
-			++length;
+		while (text[textIndex] && !isLetterOrNumber(text[textIndex]))
+		{
+			++textIndex;
 		}
-		if (text[length]) {
-			++count;                              // if there is a word, count it
-		}
-		if (text[length]) {                            // if there is a word, count it
-			int start = length;
-			int attrSize = 0;
-			int currentSize = 0;
-			while (text[length] && (isLetterOrNumber(text[length]) || text[length] == '-')) {         // skip to the end of the word
-				++attrSize;
-				++length;
-			}
-
-			while (text[length] && !isLetterOrNumber(text[length]))
+		if (text[textIndex])
+		{
+			++attributesCount;
+			int attributeStart = textIndex;
+			while (text[textIndex] && isLetter(text[textIndex]))
 			{
-				if (text[length] == '-')
-				{
-					++attrSize;
-					++length;
-					while (text[length] && text[length] != '=')
-					{
-						++attrSize;
-						++length;
-					}
-					++length;
-				}
-				if (text[length] == '=')
-				{
-					++attrSize;
-					++length;
-					while (text[length] && text[length] != '"')
-						++length;
-				}
-				else if (text[length] == '"')
-				{
-					++attrSize;
-					++length;
-					while (text[length] && text[length] != '"')
-					{
-
-						if (text[length] != ' ' && text[length] != '\n' && text[length] != '\t')
-							++attrSize;
-						++length;
-					}
-					++attrSize;
-					++length;
-				}
-				else {
-					++length;
-				}
+				++textIndex;
 			}
 
-			String attr(attrSize + 1);
-			bool hasAssignmentChar = false;
-			for (int p = start; p < length && currentSize < attrSize; p++) {
-				if ((isLetterOrNumber(text[p]) || (text[p] != ' ' && text[p] != '\n' && text[p] != '\t')) && currentSize < attrSize + 1)
+			if (text[textIndex] == '=' && text[textIndex+1] == '\"')
+			{
+				textIndex += 2;
+				do
 				{
-					if (hasAssignmentChar) {
-						if (text[p] != '"')
-							continue;
-						hasAssignmentChar = false;
-					}
-					if (text[p] == '=')
-						hasAssignmentChar = true;
-
-					attr[currentSize++] = text[p];
-				}
+					++textIndex;					
+				}while(text[textIndex] && isLetterOrNumber(text[textIndex]));
+				++textIndex;
 			}
 
-			attr[attrSize] = '\0';
-			Attribute newAttribute(attr);
+			int attributeSize = textIndex - attributeStart;
+			char* attributeText = new char[attributeSize+1];
+			strncpy(attributeText, text.toCharArray() + attributeStart, attributeSize);
+			attributeText[attributeSize] = '\0';
+
+			Attribute newAttribute(attributeText);
 			attributes.push_back(newAttribute);
+			delete[] attributeText;
 		}
 	}
 
-	return count;
+	return attributesCount;
 }
 
 int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<Attribute>& attributes) {
