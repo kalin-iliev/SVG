@@ -1,8 +1,5 @@
 #include "Shape.h"
 #include "Constants.h"
-#include <iostream>
-#include <cstring>
-#include <new>
 
 Shape::Shape(const Vector<Attribute>& attributes)
 	: attributes(attributes)

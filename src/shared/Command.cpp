@@ -3,7 +3,6 @@
 
 bool Command::isSymbolValid(char c)
 {
-	// TODO refactor - use isLetter, isNumber from utils
 	return isLetterOrNumber(c) || (c == '\\') || (c == '/') || (c == '.') || (c == ':') || (c == '_') || (c == '-');
 }
 

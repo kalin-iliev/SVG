@@ -1,4 +1,6 @@
-#pragma once // TODO remove pragma once's
+#ifndef STRING_HEADER_INCLUDED
+#define STRING_HEADER_INCLUDED
+
 #include <iostream>
 #include <string.h>
 
@@ -61,3 +63,5 @@ private:
 	void setData(const char* newValue);
 	void copy(const String& secondString);
 };
+
+#endif

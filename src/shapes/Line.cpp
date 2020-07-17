@@ -1,9 +1,10 @@
+#include <iostream>
+#include <cstring>
+
 #include "Line.h"
 #include "Circle.h"
 #include "Rectangle.h"
 #include "Helpers.h"
-#include <iostream>
-#include <cstring>
 
 Shape* Line::clone() const
 {

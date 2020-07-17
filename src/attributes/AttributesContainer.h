@@ -8,7 +8,7 @@
 
 class AttributesContainer
 {
-public: // TODO move public before protected
+public:
     AttributesContainer() {}
     AttributesContainer(const Vector<Attribute>& attributes);
 

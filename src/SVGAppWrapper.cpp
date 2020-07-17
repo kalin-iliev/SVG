@@ -1,4 +1,5 @@
 #include "SVGAppWrapper.h"
+
 void SVGAppWrapper::start()
 {
 	bool appStarted = true;

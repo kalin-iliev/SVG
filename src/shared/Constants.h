@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CONSTANTS_HEADER_INCLUDED
+#define CONSTANTS_HEADER_INCLUDED
+
 #include "String.h"
 #include "AttributeInfo.h"
 
@@ -13,3 +15,5 @@ const AttributeInfo rectAttributes[rectAttrSize] = { {"x", true}, {"y", true}, {
 
 const int lineAttrSize = 4;
 const AttributeInfo lineAttributes[lineAttrSize] = { {"x1", true}, {"y1", true}, {"x2", true}, {"y2", true} };
+
+#endif

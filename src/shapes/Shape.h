@@ -3,6 +3,7 @@
 
 #include "Attribute.h"
 #include "AttributesContainer.h"
+
 class Circle;
 class Rectangle;
 

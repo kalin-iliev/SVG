@@ -1,13 +1,14 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <fstream>
+
 #include "SVGShapesManager.h"
 #include "Shape.h"
 #include "Circle.h"
 #include "Rectangle.h"
 #include "Line.h"
 #include "Helpers.h"
-#include <iostream>
-#include <cstring>
-#include <cmath>
-#include <fstream>
 
 void SVGShapesManager::printAttributes(const AttributeInfo currentAttributes[], int size) const
 {
@@ -385,4 +386,19 @@ void SVGShapesManager::removeShapes()
 void SVGShapesManager::saveShapes(std::ofstream& svgFile)
 {
 	saveFile(svgFile);
+}
+
+int SVGShapesManager::getSize() const
+{
+	return shapes.size();
+}
+
+SVGShapesManager::operator bool() const 
+{ 
+	return shapes.size(); 
+}
+
+SVGShapesManager::operator int() const 
+{ 
+	return shapes.size(); 
 }

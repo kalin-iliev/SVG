@@ -1,5 +1,8 @@
-#pragma once
+#ifndef VECTOR_HEADER_INCLUDED
+#define VECTOR_HEADER_INCLUDED
+
 #include <iostream>
+
 const int DEFAULT_VECTOR_CAPACITY = 20;
 
 template<class T>
@@ -273,3 +276,4 @@ inline void Vector<T>::remove(unsigned index)
 	this->vSize--;
 }
 
+#endif

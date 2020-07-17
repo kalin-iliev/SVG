@@ -1,8 +1,8 @@
+#include <iostream>
+
 #include "Rectangle.h"
 #include "Circle.h"
 #include "Helpers.h"
-#include <iostream>
-#include <cstring>
 
 Shape* Rectangle::clone() const
 {

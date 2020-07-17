@@ -435,40 +435,15 @@ void InputHandler::eraseShape(SVGShapesManager& currentManager, String indexPara
 
 void InputHandler::closeFile() 
 {
-	if (!currentOpenFile)
+	if (!this->currentOpenFile)
 	{
 		throw String("Currently there is no file open.");
 	}
 
-	currentOpenFile = String();
+	this->currentOpenFile = String();
 }
 
-bool InputHandler::isCharInt(char c)
+bool InputHandler::isFileOpen() const
 {
-	return (c >= '0' && c <= '9');
-}
-
-bool InputHandler::isInt(const String& text)
-{
-	int size = text.size();
-	int start = 0;
-	int dashIndex = text.firstIndexOf('-');
-	if (dashIndex > -1 && dashIndex != 0)
-	{
-		return false;
-	}
-	if (dashIndex > -1)
-	{
-		start++;
-	}
-	
-	for (int i = start; i < size; i++)
-	{
-		if (!isCharInt(text[i]))
-		{
-			return false;
-		}
-	}
-
-	return true;
+	return this->currentOpenFile;
 }

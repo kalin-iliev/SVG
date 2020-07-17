@@ -1,5 +1,8 @@
-#pragma once
+#ifndef ATTRIBUTE_HEADER_INCLUDED
+#define ATTRIBUTE_HEADER_INCLUDED
+
 #include "String.h"
+
 class Attribute
 {
 private:
@@ -34,3 +37,4 @@ public:
 	operator bool() const { return isValid; }
 };
 
+#endif

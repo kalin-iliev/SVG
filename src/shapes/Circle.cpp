@@ -1,8 +1,9 @@
-#include "Circle.h"
-#include "Rectangle.h"
 #include <iostream>
 #include <cmath>
 #include <string>
+
+#include "Circle.h"
+#include "Rectangle.h"
 
 Shape* Circle::clone() const
 {
