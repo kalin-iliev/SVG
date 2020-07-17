@@ -1,6 +1,7 @@
 #include "String.h"
 
-void String::setData(const char* newValue) {
+void String::setData(const char* newValue)
+{
 	if (!newValue)
 	{
 		setData("");
@@ -16,19 +17,23 @@ void String::copy(const String& secondString)
 	setData(secondString.data);
 }
 
-bool String::isCharLetter(char c) const {
+bool String::isCharLetter(char c) const
+{
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }
 
-bool String::isCharUpper(char c) const {
+bool String::isCharUpper(char c) const
+{
 	return isCharLetter(c) && (c >= 'A' && c <= 'Z');
 }
 
-bool String::isCharLower(char c) const {
+bool String::isCharLower(char c) const
+{
 	return isCharLetter(c) && (c >= 'a' && c <= 'z');
 }
 
-String::String(unsigned size) {
+String::String(unsigned size)
+{
 	if(!size)
 	{
 		setData("");

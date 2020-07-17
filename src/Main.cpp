@@ -1,6 +1,7 @@
 #include "SVGAppWrapper.h"
 
-int main() {
+int main()
+{
 	//main logic
 	SVGAppWrapper newAppStart;
 	newAppStart.start();

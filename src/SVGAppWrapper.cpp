@@ -8,8 +8,10 @@ void SVGAppWrapper::start()
 	std::cout << "---------------------------------------------" << std::endl;
 	std::cout << "If you want to get started, just type help for list of functions and how to work with them." << std::endl;
 
-	while (appStarted) {
-		try {
+	while (appStarted)
+	{
+		try
+		{
 			String commandName = consoleHelp.readCommand(newManager);
 			if (commandName == "exit")
 			{
@@ -17,7 +19,8 @@ void SVGAppWrapper::start()
 				appStarted = false;
 			}
 		}
-		catch (const String& error) {
+		catch (const String& error)
+		{
 			std::cout << error << std::endl;
 		}
 	}

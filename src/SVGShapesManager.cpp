@@ -98,7 +98,8 @@ int SVGShapesManager::extractAttributes(const String& text, Vector<Attribute>& a
 	return attributesCount;
 }
 
-int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<Attribute>& attributes) {
+int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vector<Attribute>& attributes)
+{
 	unsigned size = attributes.size();
 	for (unsigned i = 0; i < size; i++)
 		if (attributes[i].getName() == attrName)
@@ -106,7 +107,8 @@ int SVGShapesManager::findAttributeNameIndex(const String& attrName, const Vecto
 	return -1;
 }
 
-Shape* SVGShapesManager::createShapeFromText(const String& text) {
+Shape* SVGShapesManager::createShapeFromText(const String& text)
+{
 	Vector<Attribute> attributes;
 	extractAttributes(text, attributes);
 
@@ -121,7 +123,8 @@ Shape* SVGShapesManager::createShapeFromText(const String& text) {
 	return newShape;
 }
 
-void SVGShapesManager::saveFile(std::ofstream& svgFile) {
+void SVGShapesManager::saveFile(std::ofstream& svgFile)
+{
 	String xmlTag = "<?xml version=\"1.0\" standalone=\"no\"?>";
 	String doctypeTag = "<!DOCTYPE svg PUBLIC \" -//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">";
 	String openSvgTag = "<svg>";
@@ -136,7 +139,8 @@ void SVGShapesManager::saveFile(std::ofstream& svgFile) {
 	svgFile << closingSvgTag << '\n';
 }
 
-bool SVGShapesManager::validateContent(std::ifstream& svgFile) {
+bool SVGShapesManager::validateContent(std::ifstream& svgFile)
+{
 	bool isFileValid = true;
 
 	if (svgFile.is_open())
@@ -181,7 +185,8 @@ bool SVGShapesManager::validateContent(std::ifstream& svgFile) {
 	return true;
 }
 
-bool SVGShapesManager::readFile(std::ifstream& svgFile) {
+bool SVGShapesManager::readFile(std::ifstream& svgFile)
+{
 	if (svgFile.is_open())
 	{
 		char c;
@@ -194,8 +199,11 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 		while ((c = svgFile.get()) && !svgFile.eof())
 		{
 			if (c == '<' && c != '>')
+			{
 				foundOpenBrace = true;
-			if (foundOpenBrace) {
+			}
+			if (foundOpenBrace)
+			{
 				buffer[pos++] = c;
 				if (pos == BUFFER_SIZE)
 				{
@@ -208,15 +216,21 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 			{
 				String line(pos);
 				for (int i = 0; i < pos; i++)
+				{
 			 		line[i] = buffer[i];
+				}
 				fileLine +=  line;
 
 				if (fileLine.contains("svg") && !fileLine.contains('!'))
 				{
 					if (!foundFirstSvg)
+					{
 						foundFirstSvg = true;
+					}
 					else
+					{
 						foundFirstSvg = false;
+					}
 				}
 				else
 				{
@@ -224,8 +238,10 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 					{
 						Shape* newShape = createShapeFromText(fileLine);
 						if(newShape)
+						{
 							addShape(newShape);
-						delete newShape;
+							delete newShape;
+						}
 					}
 				}
 				foundOpenBrace = false;
@@ -238,9 +254,12 @@ bool SVGShapesManager::readFile(std::ifstream& svgFile) {
 	return true;
 }
 
-void SVGShapesManager::clean() {
+void SVGShapesManager::clean()
+{
 	for (int i = 0; i < shapes.size(); i++)
+	{
 		delete shapes[i];
+	}
 }
 
 bool SVGShapesManager::addShape(const Shape* shape)
@@ -249,7 +268,8 @@ bool SVGShapesManager::addShape(const Shape* shape)
 	return true;
 }
 
-bool SVGShapesManager::removeShape(unsigned index) {
+bool SVGShapesManager::removeShape(unsigned index)
+{
 	try
 	{
 		shapes.remove(index);
@@ -261,27 +281,35 @@ bool SVGShapesManager::removeShape(unsigned index) {
 	}
 }
 
-void SVGShapesManager::translateShapes(int x, int y, unsigned id) {
+void SVGShapesManager::translateShapes(int x, int y, unsigned id)
+{
 	if (!(id >= 1 && id <= shapes.size()))
 	{
 		std::cout << "You must choose a shape with valid id number." << std::endl;
 		return;
 	}
-	std::cout << "Successfully translated shape at index " << id << std::endl;
+	
 	shapes[id - 1]->translateCoordinates(x, y);
+	std::cout << "Successfully translated shape at index " << id << std::endl;
 }
 
-void SVGShapesManager::translateShapes(int x, int y) {
+void SVGShapesManager::translateShapes(int x, int y)
+{
 	for(int i = 0; i < shapes.size(); i++)
+	{
 		shapes[i]->translateCoordinates(x, y);
+	}
+
 	std::cout << "Successfully translated all shapes." << std::endl;
 }
 
-void SVGShapesManager::containedInCircle(const Circle& other) const {
+void SVGShapesManager::containedInCircle(const Circle& other) const
+{
 	bool containedShapes = false;
 	for (int i = 0; i < shapes.size(); i++)
 	{
-		if (shapes[i]->fitsInCircle(other)) {
+		if (shapes[i]->fitsInCircle(other))
+		{
 			containedShapes = true;
 			std::cout << i + 1 << ". ";
 			shapes[i]->print();
@@ -294,11 +322,13 @@ void SVGShapesManager::containedInCircle(const Circle& other) const {
 	}	
 }
 
-void SVGShapesManager::containedInRect(const Rectangle& other) const {
+void SVGShapesManager::containedInRect(const Rectangle& other) const
+{
 	bool containedShapes = false;
 	for (int i = 0; i < shapes.size(); i++)
 	{
-		if (shapes[i]->fitsInRectangle(other)) {
+		if (shapes[i]->fitsInRectangle(other))
+		{
 			containedShapes = true;
 			std::cout << i + 1 << ". ";
 			shapes[i]->print();
@@ -320,8 +350,10 @@ void SVGShapesManager::printShapes() const
 	}
 }
 
-void SVGShapesManager::loadSVGFile(const String& path) {
-	try {
+void SVGShapesManager::loadSVGFile(const String& path)
+{
+	try
+	{
 		std::ifstream svgFile(path.toCharArray());
 		std::ifstream svgIsCorrect(path.toCharArray());
 		validateContent(svgIsCorrect);
@@ -332,25 +364,31 @@ void SVGShapesManager::loadSVGFile(const String& path) {
 	{
 		std::cout << e.what() << std::endl;
 	}
-	catch (const char* error) {
+	catch (const char* error)
+	{
 		std::cout << error << std::endl;
 	}
 }
 
 SVGShapesManager::SVGShapesManager() {}
 
-SVGShapesManager::~SVGShapesManager() {
+SVGShapesManager::~SVGShapesManager()
+{
 	this->clean();
 }
 
-void SVGShapesManager::removeShapes() {
+void SVGShapesManager::removeShapes()
+{
 	if (shapes.size() > 0)
 	{
 		for (int i = 0; i < shapes.size(); i++)
+		{
 			delete shapes[i];
+		}
 	}
 }
 
-void SVGShapesManager::saveShapes(std::ofstream& svgFile) {
+void SVGShapesManager::saveShapes(std::ofstream& svgFile)
+{
 	saveFile(svgFile);
 }

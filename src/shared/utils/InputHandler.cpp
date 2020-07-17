@@ -161,7 +161,8 @@ int InputHandler::findParameterIndex(const String& parameterName, const Vector<S
 	for (int i = 0; i < size; i++)
 	{
 		String currentParameter = parameters[i];
-		if (currentParameter.beginsWith(parameterName)) {
+		if (currentParameter.beginsWith(parameterName))
+		{
 			int indexEqual = currentParameter.firstIndexOf('=');
 			if (indexEqual > -1 && indexEqual != parameterName.size())
 			{

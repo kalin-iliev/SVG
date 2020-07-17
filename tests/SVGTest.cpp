@@ -2,21 +2,24 @@
 
 void SVGTest::testPrintShapes()
 {
-	try {
+	try
+	{
 		std::cout << "Testing print of shapes...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
 		currentManager.printShapes();
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
 
 void SVGTest::testCreateValidShape()
 {
-	try {
+	try
+	{
 		std::cout << "Testing create shape circle 10 10 10 yellow ...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -26,7 +29,8 @@ void SVGTest::testCreateValidShape()
 		delete currentShape;
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
@@ -34,7 +38,8 @@ void SVGTest::testCreateValidShape()
 void SVGTest::testCreateInvalidShapeWithInvalidName()
 {
 	Shape* currentShape = nullptr;
-	try {
+	try
+	{
 		std::cout << "Testing create shape circless 10 10 10 yellow with unknown name...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -44,7 +49,8 @@ void SVGTest::testCreateInvalidShapeWithInvalidName()
 		delete currentShape;
 		assert(false);
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		std::cout << error << std::endl;
 		std::cout << "Test passed successfully." << std::endl;
 	}
@@ -53,7 +59,8 @@ void SVGTest::testCreateInvalidShapeWithInvalidName()
 void SVGTest::testCreateInvalidShapeWithInvalidAttributes()
 {
 	Shape* currentShape = nullptr;
-	try {
+	try
+	{
 		std::cout << "Testing create shape circle 10 10 yellow without radius...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -63,7 +70,8 @@ void SVGTest::testCreateInvalidShapeWithInvalidAttributes()
 		delete currentShape;
 		assert(false);
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		std::cout << error << std::endl;
 		std::cout << "Test passed successfully." << std::endl;
 	}
@@ -71,7 +79,8 @@ void SVGTest::testCreateInvalidShapeWithInvalidAttributes()
 
 void SVGTest::testEraseValidShape()
 {
-	try {
+	try
+	{
 		std::cout << "Testing erase shape with valid index...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -79,14 +88,16 @@ void SVGTest::testEraseValidShape()
 		currentManager.removeShape(1);
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
 
 void SVGTest::testEraseInvalidShape()
 {
-	try {
+	try
+	{
 		std::cout << "Testing erase shape with invalid index...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -94,7 +105,8 @@ void SVGTest::testEraseInvalidShape()
 		currentManager.removeShape(100);
 		assert(false);
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		std::cout << error << std::endl;
 		std::cout << "Test passed successfully." << std::endl;
 	}
@@ -102,49 +114,56 @@ void SVGTest::testEraseInvalidShape()
 
 void SVGTest::testTranslateAll()
 {
-	try {
+	try
+	{
 		std::cout << "Testing translate all shapes with x = 10 and y = 10...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
 		currentManager.translateShapes(10, 10);
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
 
 void SVGTest::testTranslateValidIndex()
 {
-	try {
+	try
+	{
 		std::cout << "Testing translate shape with index 1 with x = 10 and y = 10...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
 		currentManager.translateShapes(10, 10, 1);
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
 
 void SVGTest::testTranslateInvalidIndex()
 {
-	try {
+	try
+	{
 		std::cout << "Testing translate shape with invalid index 100 with x = 10 and y = 10...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
 		currentManager.translateShapes(10, 10, 100);
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }
 
 void SVGTest::testWithinShape()
 {
-	try {
+	try
+	{
 		std::cout << "Testing within shape circle 10 10 10...." << std::endl;
 		SVGShapesManager currentManager;
 		currentManager.loadSVGFile("figures.svg");
@@ -153,7 +172,8 @@ void SVGTest::testWithinShape()
 		currentManager.containedInCircle(currentCircle);
 		std::cout << "Test passed successfully." << std::endl;
 	}
-	catch (const String& error) {
+	catch (const String& error)
+	{
 		assert(false);
 	}
 }

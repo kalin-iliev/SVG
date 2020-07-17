@@ -46,19 +46,22 @@ String Attribute::getAttrName(const String& attribute)
 	return attributeName;
 }
 
-Attribute::Attribute() {
+Attribute::Attribute()
+{
 	name = value = "";
 	isValid = false;
 	isValueInt = false;
 }
 
-Attribute::Attribute(const String& attrName, const String& attrValue, bool valueIsInt) {
+Attribute::Attribute(const String& attrName, const String& attrValue, bool valueIsInt) 
+{
 	if (valueIsInt && !isInt(attrValue))
 	{
 		name = value = String();
 		isValueInt = isValid = false;
 	}
-	else {
+	else 
+	{
 		name = attrName;
 		value = attrValue;
 		if (!name.size())
@@ -82,7 +85,8 @@ Attribute::Attribute(const String& attribute, bool valueIsInt)
 		isValid = true;
 		isValueInt = false;
 	}
-	else {
+	else 
+	{
 		name = getAttrName(attribute);
 		value = getAttrValue(attribute);
 		if (!name.size())
@@ -107,7 +111,8 @@ Attribute::Attribute(const String& attribute, bool valueIsInt)
 	}
 }
 
-Attribute::Attribute(const Attribute& attribute) {
+Attribute::Attribute(const Attribute& attribute) 
+{
 	if (this != &attribute)
 	{
 		name = attribute.name;
@@ -116,7 +121,8 @@ Attribute::Attribute(const Attribute& attribute) {
 	}
 }
 
-Attribute& Attribute::operator=(const Attribute& attribute) {
+Attribute& Attribute::operator=(const Attribute& attribute) 
+{
 	if (this != &attribute)
 	{
 		name = attribute.name;
@@ -126,15 +132,21 @@ Attribute& Attribute::operator=(const Attribute& attribute) {
 	return *this;
 }
 
-Attribute& Attribute::operator=(const String& attrValue) {
+Attribute& Attribute::operator=(const String& attrValue) 
+{
 	if (!(value == attrValue))
+	{
 		value = attrValue;
+	}
 	return *this;
 }
 
-void Attribute::setValue(const String& newValue) {
+void Attribute::setValue(const String& newValue) 
+{
 	if (isValueInt && !isInt(newValue))
+	{
 		return;
+	}
 	value = newValue;
 }
 
